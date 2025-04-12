@@ -1,0 +1,191 @@
+# LMS Technical Context
+
+## Technologies Used
+
+### Frontend
+- **Framework**: React 18 with TypeScript
+- **Build Tool**: Vite for fast development and optimized builds
+- **Styling**: styled-components for component-scoped CSS
+- **Routing**: React Router v6 for application navigation
+- **State Management**: React Context API and hooks
+- **Animation**: Framer Motion for transitions and animations
+- **Icons**: React-icons with Feather icon set
+- **Package Manager**: npm
+
+### Planned Backend (Not Implemented Yet)
+- **Framework**: Node.js with Express
+- **Database**: PostgreSQL
+- **ORM**: Prisma
+- **Authentication**: JWT (JSON Web Tokens)
+- **API**: RESTful endpoints
+
+## Development Setup
+
+### Frontend
+- Vite-based React application with TypeScript
+- ESLint configured for code quality
+- Styled-components for styling with ThemeProvider
+- React Router for navigation between pages and panels
+- Directory structure organized by panel (admin, teacher, student)
+
+### Environment Requirements
+- Node.js 16+
+- npm 7+
+- Modern browser with ES6 support
+
+## Technical Constraints
+
+### Frontend
+- Browser compatibility focuses on modern browsers
+- Mobile responsiveness is required down to 320px width
+- Accessible components following WCAG guidelines
+- Component reusability across panels where appropriate
+
+### Backend (Planned)
+- Secure API endpoints with proper authentication
+- Rate limiting for public endpoints
+- Efficient database queries for performance
+- File size limitations for uploads
+
+## Dependencies
+
+### Core Libraries
+- `react` and `react-dom` - UI framework
+- `react-router-dom` - Routing library
+- `styled-components` - CSS-in-JS styling
+- `framer-motion` - Animation library
+- `react-icons` - Icon sets including Feather icons
+
+### Development Tools
+- `typescript` - Type checking
+- `vite` - Development server and builder
+- `eslint` - Code linting
+
+## Tool Usage Patterns
+
+### Component Structure
+```
+ComponentName/
+  ├── index.tsx       // Main component
+  ├── styles.ts       // Styled components
+  ├── types.ts        // TypeScript interfaces
+  └── utils.ts        // Helper functions
+```
+
+### Styling Patterns
+- Themed components using the ThemeProvider
+- Responsive styles using media queries
+- Animation handled through Framer Motion
+- Consistent spacing with theme variables
+
+### State Management
+- Component state with useState hook
+- Complex component state with useReducer
+- Shared state with Context API
+- Props for parent-child communication
+
+## Frontend Architecture
+
+### Component Hierarchy
+```
+App
+├── Routes
+│   ├── AdminRoutes
+│   │   ├── AdminLayout
+│   │   │   ├── Sidebar
+│   │   │   ├── Header
+│   │   │   └── Footer
+│   │   └── AdminPages
+│   ├── TeacherRoutes
+│   └── StudentRoutes
+└── Shared Components
+```
+
+### Layout Structure
+- `AdminLayout` - Container for all admin pages
+  - `Sidebar` - Navigation menu with collapsible behavior
+  - `Header` - Top bar with search and notifications
+  - `ContentWrapper` - Main content area
+  - `Footer` - Bottom section with copyright info
+
+### Responsive Strategy
+- Mobile-first approach with breakpoints
+- Sidebar collapses to icons-only on medium screens
+- Sidebar converts to overlay on mobile devices
+- Content adjusts to available screen space
+
+## Authentication & Authorization
+
+### Planned Authentication Flow
+- JWT-based authentication
+- Secure token storage in localStorage/cookies
+- Automatic token refresh mechanism
+- Protected routes with role-based access
+
+### Planned Role Structure
+- Super Admin - Full system access
+- School Admin - School-specific administration
+- Teacher - Teaching and content management
+- Student - Learning and content consumption
+- Parent - Student monitoring and communication
+
+## Data Management
+
+### Planned Data Flow
+- API service layer for data fetching
+- Request/response interceptors for auth and errors
+- Centralized error handling
+- Data caching strategy
+
+### Form Handling
+- Controlled components for form inputs
+- Form validation with error messaging
+- Optimistic UI updates when appropriate
+
+## Current Implementation Details
+
+### Admin Panel
+- Responsive layout with collapsible sidebar
+- Navigation menu with active state indicators
+- Header with search functionality
+- Dashboard page structure
+- Adaptive mobile navigation with overlay
+
+### Component Features
+- **Sidebar**:
+  - Collapsible navigation
+  - Active state highlighting
+  - Mobile overlay mode
+  - Category organization
+  - User profile section
+
+- **Header**:
+  - Search functionality
+  - Notification system
+  - User avatar
+  - Clean, minimal design
+
+- **Footer**:
+  - Copyright information
+  - Policy links
+  - Responsive layout
+
+### Theme System
+- Color palette with primary, secondary, and accent colors
+- Consistent spacing scales
+- Typography system with responsive sizes
+- Shadow elevations
+- Border radius consistency
+- Transition timing
+
+## Planned Testing Strategy
+
+### Unit Testing
+- Component testing with React Testing Library
+- Hook testing for custom hooks
+- Utility function testing
+
+### Integration Testing
+- User flows across multiple components
+- Form submission and validation
+- API interaction 
