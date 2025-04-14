@@ -40,6 +40,7 @@
 - Mobile responsiveness is required down to 320px width
 - Accessible components following WCAG guidelines
 - Component reusability across panels where appropriate
+- Support for both light and dark themes with proper contrast
 
 ### Backend (Planned)
 - Secure API endpoints with proper authentication
@@ -77,12 +78,14 @@ ComponentName/
 - Responsive styles using media queries
 - Animation handled through Framer Motion
 - Consistent spacing with theme variables
+- Theme-aware styles that adapt to light/dark modes
 
 ### State Management
 - Component state with useState hook
 - Complex component state with useReducer
 - Shared state with Context API
 - Props for parent-child communication
+- Theme context for managing application appearance
 
 ## Frontend Architecture
 
@@ -97,6 +100,18 @@ App
 │   │   │   └── Footer
 │   │   └── AdminPages
 │   ├── TeacherRoutes
+│   │   ├── TeacherLayout
+│   │   │   ├── Sidebar
+│   │   │   ├── Header
+│   │   │   └── Footer
+│   │   └── TeacherPages
+│   │       ├── TeacherDashboard
+│   │       ├── TeacherSchedule
+│   │       ├── TeacherStudents
+│   │       ├── TeacherAssignments
+│   │       ├── TeacherGrades
+│   │       ├── TeacherCourses
+│   │       └── TeacherMessages
 │   └── StudentRoutes
 └── Shared Components
 ```
@@ -107,6 +122,47 @@ App
   - `Header` - Top bar with search and notifications
   - `ContentWrapper` - Main content area
   - `Footer` - Bottom section with copyright info
+
+- `TeacherLayout` - Container for all teacher pages
+  - `Sidebar` - Navigation menu for teacher functionality
+  - `Header` - Top bar with search and user profile
+  - `ContentWrapper` - Main content area
+  - `Footer` - Bottom section with info
+
+### Routing Structure
+```tsx
+// Admin Routes
+<Route path="/admin" element={<ProtectedRoute requiredRole="admin"><AdminLayout /></ProtectedRoute>}>
+  <Route path="dashboard" element={<Dashboard />} />
+  <Route path="users" element={<Users />} />
+  <Route path="roles" element={<Roles />} />
+  <Route path="subjects" element={<Subjects />} />
+  <Route path="classes" element={<Classes />} />
+  <Route path="timetables" element={<Timetables />} />
+  <Route path="settings" element={<Settings />} />
+  <Route path="profile" element={<ProfilePage />} />
+</Route>
+
+// Teacher Routes
+<Route path="/teacher" element={<ProtectedRoute requiredRole="teacher"><TeacherLayout /></ProtectedRoute>}>
+  <Route path="dashboard" element={<TeacherDashboard />} />
+  <Route path="profile" element={<ProfilePage />} />
+  <Route path="courses" element={<TeacherCourses />} />
+  <Route path="courses/:courseId" element={<div>Course Details (Coming Soon)</div>} />
+  <Route path="students" element={<TeacherStudents />} />
+  <Route path="assignments" element={<TeacherAssignments />} />
+  <Route path="grades" element={<TeacherGrades />} />
+  <Route path="schedule" element={<TeacherSchedule />} />
+  <Route path="messages" element={<TeacherMessages />} />
+  <Route path="settings" element={<Settings />} />
+</Route>
+
+// Student Routes
+<Route path="/student" element={<ProtectedRoute requiredRole="student"><div>Student Layout</div></ProtectedRoute>}>
+  <Route path="dashboard" element={<div>Student Dashboard (Coming Soon)</div>} />
+  <Route path="profile" element={<ProfilePage />} />
+</Route>
+```
 
 ### Responsive Strategy
 - Mobile-first approach with breakpoints
@@ -177,6 +233,41 @@ App
 - Shadow elevations
 - Border radius consistency
 - Transition timing
+- Light and dark theme modes with distinct color palettes
+- Text selection styling for proper visibility
+- Proper contrast ratios for accessibility
+
+### Theming Implementation
+- Theme defined in `frontend/src/styles/theme.ts`
+- Global styles in `frontend/src/styles/globalStyles.ts`
+- Theme context in App component for global state
+- `createTheme` function that generates themes based on mode (light/dark)
+- Color palette preservation across themes
+- Dark mode-specific adjustments for readability and contrast
+- Component-specific theme adaptations
+
+## Dark Theme Implementation Details
+
+### Theme Structure
+- Base theme with shared properties (spacing, borders, animations)
+- Light theme extends base theme with light-specific colors
+- Dark theme extends base theme with dark-specific colors
+- Theme context allows toggling between modes
+
+### Color Adaptation Strategy
+- Background colors have multiple levels for layering (primary, secondary, tertiary)
+- Text colors have different contrast levels (primary, secondary, tertiary)
+- Border colors adapt to provide proper definition in both themes
+- Shadow styles adjust for better visibility in dark mode
+- Each component accesses theme via props from styled-components
+
+### Accessibility Considerations
+- Text selection is styled for visibility in both themes
+- Input fields have proper contrast against backgrounds
+- Interactive elements maintain distinction in both themes
+- Focus indicators remain visible in dark mode
+- Table row selection is clearly visible 
+- Status indicators maintain their semantic meaning in both themes
 
 ## Planned Testing Strategy
 
@@ -188,4 +279,11 @@ App
 ### Integration Testing
 - User flows across multiple components
 - Form submission and validation
-- API interaction 
+- API interaction
+- Theme switching functionality
+
+### Accessibility Testing
+- Color contrast verification
+- Keyboard navigation testing
+- Screen reader compatibility
+- Focus management 

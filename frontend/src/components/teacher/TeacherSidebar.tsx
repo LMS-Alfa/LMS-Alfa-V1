@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiUsers, FiBook, FiSettings, FiHome, FiChevronLeft, FiChevronRight, FiLogOut, FiBriefcase, FiCalendar, FiMenu, FiX, FiShield, FiLayers, FiBarChart2, FiUser } from 'react-icons/fi';
+import { 
+  FiHome, FiBook, FiCalendar, FiUsers, FiClipboard, 
+  FiSettings, FiChevronLeft, FiChevronRight, 
+  FiMenu, FiX, FiCheckSquare, FiMessageSquare 
+} from 'react-icons/fi';
 import LogoutButton from '../common/LogoutButton';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -57,7 +61,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ icon, label, to, isCollapsed }) => 
   );
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, onMobileToggle }) => {
+const TeacherSidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, onMobileToggle }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { user } = useAuth();
@@ -104,43 +108,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, onMobileT
     return user?.fullName || user?.username || 'User';
   };
 
-  // Get user role from localStorage
+  // Get user role display
   const getUserRole = () => {
-    const userInfo = localStorage.getItem('lms_user');
-    if (userInfo) {
-      try {
-        const parsedInfo = JSON.parse(userInfo);
-        return parsedInfo.role || 'student';
-      } catch (error) {
-        console.error('Error parsing user info:', error);
-        return 'student';
-      }
-    }
-    return user?.role || 'student';
+    return user?.role || 'User';
   };
-
-  const role = getUserRole();
-  console.log('Detected user role:', role);
-
-  // Admin menu items
-  const adminMenu = [
-    { path: '/admin/dashboard', icon: <FiHome />, label: 'Dashboard' },
-    { path: '/admin/users', icon: <FiUsers />, label: 'User Management' },
-    { path: '/admin/roles', icon: <FiShield />, label: 'Role Management' },
-    { path: '/admin/subjects', icon: <FiBook />, label: 'Subjects' },
-    { path: '/admin/classes', icon: <FiLayers />, label: 'Classes' },
-    { path: '/admin/timetables', icon: <FiCalendar />, label: 'Timetables' },
-    { path: '/admin/settings', icon: <FiSettings />, label: 'Settings' },
-    { path: '/admin/profile', icon: <FiUser />, label: 'Profile' },
-  ];
-
-  // Teacher menu items
-  const teacherMenu = [
-    { path: '/teacher/dashboard', icon: <FiHome />, label: 'Dashboard' },
-    { path: '/teacher/students', icon: <FiUsers />, label: 'Students' },
-    { path: '/teacher/schedule', icon: <FiCalendar />, label: 'Schedule' },
-    { path: '/teacher/profile', icon: <FiUser />, label: 'Profile' },
-  ];
 
   return (
     <>
@@ -190,52 +161,74 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, onMobileT
 
             <MenuContainer>
               <MenuSection>
-                {role === 'admin' && (
-                  <>
-                    {adminMenu.map((item) => (
-                      <MenuItem 
-                        key={item.path}
-                        icon={item.icon} 
-                        label={item.label} 
-                        to={item.path} 
-                        isCollapsed={isMobile ? false : isCollapsed} 
-                      />
-                    ))}
-                  </>
-                )}
-                {role === 'teacher' && (
-                  <>
-                    {teacherMenu.map((item) => (
-                      <MenuItem 
-                        key={item.path}
-                        icon={item.icon} 
-                        label={item.label} 
-                        to={item.path} 
-                        isCollapsed={isMobile ? false : isCollapsed} 
-                      />
-                    ))}
-                  </>
-                )}
+                <MenuItem 
+                  icon={<FiHome />} 
+                  label="Dashboard" 
+                  to="/teacher/dashboard" 
+                  isCollapsed={isMobile ? false : isCollapsed} 
+                />
+                <MenuItem 
+                  icon={<FiBook />} 
+                  label="My Courses" 
+                  to="/teacher/courses" 
+                  isCollapsed={isMobile ? false : isCollapsed} 
+                />
+                <MenuItem 
+                  icon={<FiUsers />} 
+                  label="Students" 
+                  to="/teacher/students" 
+                  isCollapsed={isMobile ? false : isCollapsed} 
+                />
+                <MenuItem 
+                  icon={<FiClipboard />} 
+                  label="Assignments" 
+                  to="/teacher/assignments" 
+                  isCollapsed={isMobile ? false : isCollapsed} 
+                />
+                <MenuItem 
+                  icon={<FiCheckSquare />} 
+                  label="Grades" 
+                  to="/teacher/grades" 
+                  isCollapsed={isMobile ? false : isCollapsed} 
+                />
+                <MenuItem 
+                  icon={<FiCalendar />} 
+                  label="Schedule" 
+                  to="/teacher/schedule" 
+                  isCollapsed={isMobile ? false : isCollapsed} 
+                />
+                <MenuItem 
+                  icon={<FiMessageSquare />} 
+                  label="Messages" 
+                  to="/teacher/messages" 
+                  isCollapsed={isMobile ? false : isCollapsed} 
+                />
               </MenuSection>
 
-              <MenuSection>
-                <AnimatePresence>
-                  {(!isCollapsed || isMobile) && (
-                    <SectionLabel
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ delay: 0.2 }}
-                    >
-                      System
-                    </SectionLabel>
-                  )}
-                </AnimatePresence>
+              <AnimatePresence>
+                {(!isCollapsed || isMobile) && (
+                  <SectionLabel
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ delay: 0.2 }}
+                  >
+                    Account
+                  </SectionLabel>
+                )}
+              </AnimatePresence>
 
+              <MenuSection>
                 <MenuItem 
                   icon={<FiSettings />} 
                   label="Settings" 
-                  to={`/${role}/settings`}
+                  to="/teacher/settings" 
+                  isCollapsed={isMobile ? false : isCollapsed} 
+                />
+                <MenuItem 
+                  icon={<FiUsers />} 
+                  label="Profile" 
+                  to="/teacher/profile" 
                   isCollapsed={isMobile ? false : isCollapsed} 
                 />
               </MenuSection>
@@ -254,7 +247,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, onMobileT
                     transition={{ duration: 0.2 }}
                   >
                     <ProfileName>{getFullName()}</ProfileName>
-                    <ProfileRole>{role === 'admin' ? 'Admin' : role === 'teacher' ? 'Teacher' : 'Student'}</ProfileRole>
+                    <ProfileRole>{getUserRole()}</ProfileRole>
                   </ProfileInfo>
                 )}
               </AnimatePresence>
@@ -565,4 +558,4 @@ const SidebarLogoutButton = styled(LogoutButton)`
   }
 `;
 
-export default Sidebar;
+export default TeacherSidebar; 

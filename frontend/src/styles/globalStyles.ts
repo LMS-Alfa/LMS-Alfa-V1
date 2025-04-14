@@ -80,14 +80,92 @@ const GlobalStyle = createGlobalStyle`
     font-size: 16px;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background-color: var(--neutral-100);
-    color: var(--neutral-900);
+    background-color: ${props => props.theme.colors.background.primary};
+    color: ${props => props.theme.colors.text.primary};
     height: 100%;
     width: 100%;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   #root {
     height: 100%;
+  }
+
+  /* Ensure text selection is visible with proper contrast in all contexts */
+  ::selection {
+    background-color: ${props => props.theme.colors.primary[600]};
+    color: white;
+  }
+
+  ::-moz-selection {
+    background-color: ${props => props.theme.colors.primary[600]};
+    color: white;
+  }
+
+  /* Ensure text selection within inputs and contentEditable elements works in dark mode */
+  input::selection, 
+  textarea::selection, 
+  [contenteditable]::selection,
+  select::selection,
+  option::selection,
+  td::selection,
+  th::selection,
+  div::selection,
+  p::selection,
+  span::selection,
+  li::selection,
+  a::selection,
+  h1::selection, h2::selection, h3::selection, h4::selection, h5::selection, h6::selection {
+    background-color: ${props => props.theme.colors.primary[600]};
+    color: white;
+  }
+
+  /* Fix for Firefox */
+  input::-moz-selection, 
+  textarea::-moz-selection, 
+  [contenteditable]::-moz-selection,
+  select::-moz-selection,
+  option::-moz-selection,
+  td::-moz-selection,
+  th::-moz-selection,
+  div::-moz-selection,
+  p::-moz-selection,
+  span::-moz-selection,
+  li::-moz-selection,
+  a::-moz-selection,
+  h1::-moz-selection, h2::-moz-selection, h3::-moz-selection, h4::-moz-selection, h5::-moz-selection, h6::-moz-selection {
+    background-color: ${props => props.theme.colors.primary[600]};
+    color: white;
+  }
+
+  /* Fix for table row selection */
+  tr.selected, tr:focus-within {
+    background-color: ${props => 
+      props.theme.colors.background.primary === '#0f172a' 
+        ? props.theme.colors.primary[900] + '80'  // Dark theme
+        : props.theme.colors.primary[50]          // Light theme
+    } !important;
+    outline: 1px solid ${props => props.theme.colors.primary[500]};
+  }
+
+  tr td.selected, tr td:focus-within {
+    background-color: ${props => 
+      props.theme.colors.background.primary === '#0f172a' 
+        ? props.theme.colors.primary[700] + '50'  // Dark theme
+        : props.theme.colors.primary[100]         // Light theme
+    } !important;
+  }
+
+  /* Make checkboxes more visible in dark mode */
+  input[type="checkbox"] {
+    accent-color: ${props => props.theme.colors.primary[600]};
+    width: 16px;
+    height: 16px;
+    
+    &:checked {
+      background-color: ${props => props.theme.colors.primary[600]};
+      border-color: ${props => props.theme.colors.primary[600]};
+    }
   }
 
   a {
@@ -103,6 +181,12 @@ const GlobalStyle = createGlobalStyle`
   button, input, select, textarea {
     font-family: inherit;
     font-size: inherit;
+  }
+
+  /* Fix for selection in inputs */
+  input::selection, textarea::selection {
+    background-color: ${props => props.theme.colors.primary[400]};
+    color: ${props => props.theme.colors.text.inverse};
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -137,16 +221,16 @@ const GlobalStyle = createGlobalStyle`
   }
 
   ::-webkit-scrollbar-track {
-    background: var(--neutral-100);
+    background: ${props => props.theme.colors.background.lighter};
   }
 
   ::-webkit-scrollbar-thumb {
-    background: var(--neutral-400);
+    background: ${props => props.theme.colors.text.tertiary};
     border-radius: var(--border-radius-full);
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--neutral-500);
+    background: ${props => props.theme.colors.text.secondary};
   }
 `;
 

@@ -19,7 +19,28 @@ We have implemented the foundation of the Admin Panel UI, with significant progr
 - Data filtering and search functionality
 - Role-based access control interface with permissions management
 
-Other panels and backend systems are planned but not yet implemented.
+We have begun implementing the Teacher Panel with:
+- Students management page with comprehensive features
+  - Responsive table with student information (name, email, class, courses)
+  - Performance tracking with visual indicators
+  - Attendance tracking with percentage displays
+  - Status indicators (active/inactive)
+  - Advanced filtering options (status-based, performance-based)
+  - Course-specific filtering
+  - Searchable student list
+  - Sortable columns for better organization
+  - Action buttons for student interaction
+- Assignments management page with comprehensive features
+  - Table-based interface with sortable columns
+  - Status-based filtering (draft, published, grading, completed)
+  - Course-specific filtering
+  - Search functionality
+  - Modal-based assignment creation with form validation
+  - Visual status indicators with color-coded badges
+  - Submission tracking with completion metrics
+- Schedule page with weekly calendar view and class details
+
+Other Student Panel and backend systems are planned but not yet implemented.
 
 ## Key Technical Decisions
 
@@ -42,6 +63,8 @@ Other panels and backend systems are planned but not yet implemented.
 - **View Modes**: Toggle between grid and list views for Classes page
 - **Permissions Management**: Modal interface for managing role permissions
 - **Form Components**: Reusable form components for data entry
+- **Teacher Students Page**: Table-based interface with filtering, sorting, and visual indicators
+- **Teacher Schedule Page**: Weekly calendar grid with time slots and visual class representations
 
 ## Design Patterns in Use
 
@@ -188,6 +211,383 @@ Other panels and backend systems are planned but not yet implemented.
 ) : (
   <ListView items={items} />
 )}
+```
+
+#### Student Management Pattern
+```tsx
+<StudentsContainer>
+  <PageHeader>
+    <div>
+      <PageTitle>Students</PageTitle>
+      <PageDescription>Manage and monitor student progress across your courses</PageDescription>
+    </div>
+    <HeaderActions>
+      <ExportButton>
+        <FiDownload />
+        <span>Export Data</span>
+      </ExportButton>
+    </HeaderActions>
+  </PageHeader>
+
+  <SearchFilterBar>
+    <SearchBox>
+      <SearchIcon><FiSearch /></SearchIcon>
+      <SearchInput
+        type="text"
+        placeholder="Search students..."
+        value={searchTerm}
+        onChange={handleSearchChange}
+      />
+    </SearchBox>
+
+    <FilterContainer>
+      <FilterButton onClick={() => setShowFilters(!showFilters)}>
+        <FiFilter />
+        <span>Filter</span>
+      </FilterButton>
+      
+      {showFilters && (
+        <FilterDropdown>
+          <FilterOption>All Students</FilterOption>
+          <FilterOption>Active Students</FilterOption>
+          <FilterOption>Inactive Students</FilterOption>
+          <FilterOption>High Performers</FilterOption>
+          <FilterOption>Needs Help</FilterOption>
+        </FilterDropdown>
+      )}
+    </FilterContainer>
+
+    <CourseDropdown>
+      <CourseButton onClick={() => setShowCourseDropdown(!showCourseDropdown)}>
+        <FiBook />
+        <span>{selectedCourse ? selectedCourse : "All Courses"}</span>
+        <FiChevronDown />
+      </CourseButton>
+      
+      {showCourseDropdown && (
+        <CourseDropdownMenu>
+          <CourseOption>All Courses</CourseOption>
+          {uniqueCourses.map(course => (
+            <CourseOption key={course}>{course}</CourseOption>
+          ))}
+        </CourseDropdownMenu>
+      )}
+    </CourseDropdown>
+  </SearchFilterBar>
+
+  <StudentsTable>
+    <thead>
+      <tr>
+        <TableHeader onClick={() => handleSort('name')}>
+          <span>Student Name</span>
+          {sortBy === 'name' && <SortIcon $direction={sortDirection} />}
+        </TableHeader>
+        {/* Other headers */}
+      </tr>
+    </thead>
+    <tbody>
+      {sortedStudents.map(student => (
+        <TableRow key={student.id}>
+          <TableCell>
+            <StudentInfo>
+              <StudentAvatar src={student.avatar} alt={student.name} />
+              <StudentDetails>
+                <StudentName>{student.name}</StudentName>
+                <StudentEmail>{student.email}</StudentEmail>
+              </StudentDetails>
+            </StudentInfo>
+          </TableCell>
+          {/* Other cells */}
+        </TableRow>
+      ))}
+    </tbody>
+  </StudentsTable>
+</StudentsContainer>
+```
+
+#### Assignment Management Pattern
+```tsx
+<AssignmentsContainer>
+  <PageHeader>
+    <div>
+      <PageTitle>Assignments</PageTitle>
+      <PageDescription>Create and manage assignments for your courses</PageDescription>
+    </div>
+    <HeaderActions>
+      <ExportButton>
+        <FiDownload />
+        <span>Export</span>
+      </ExportButton>
+      <CreateButton onClick={() => setShowNewAssignmentModal(true)}>
+        <FiPlus />
+        <span>New Assignment</span>
+      </CreateButton>
+    </HeaderActions>
+  </PageHeader>
+
+  <SearchFilterBar>
+    <SearchBox>
+      <SearchIcon><FiSearch /></SearchIcon>
+      <SearchInput
+        type="text"
+        placeholder="Search assignments..."
+        value={searchTerm}
+        onChange={handleSearchChange}
+      />
+    </SearchBox>
+
+    <FilterContainer>
+      <FilterButton onClick={() => setShowFilters(!showFilters)}>
+        <FiFilter />
+        <span>Filter</span>
+      </FilterButton>
+      
+      {showFilters && (
+        <FilterDropdown>
+          <FilterOption 
+            onClick={() => handleFilterChange('all')}
+            $isActive={filter === 'all'}
+          >
+            All Assignments
+          </FilterOption>
+          <FilterOption 
+            onClick={() => handleFilterChange('upcoming')}
+            $isActive={filter === 'upcoming'}
+          >
+            Upcoming
+          </FilterOption>
+          {/* Other filter options */}
+        </FilterDropdown>
+      )}
+    </FilterContainer>
+
+    <CourseDropdown>
+      <CourseButton onClick={() => setShowCourseDropdown(!showCourseDropdown)}>
+        <FiBook />
+        <span>{selectedCourse ? "Selected Course" : "All Courses"}</span>
+        <FiChevronDown />
+      </CourseButton>
+      
+      {showCourseDropdown && (
+        <CourseDropdownMenu>
+          <CourseOption>All Courses</CourseOption>
+          {courses.map(course => (
+            <CourseOption key={course.id}>{course.name}</CourseOption>
+          ))}
+        </CourseDropdownMenu>
+      )}
+    </CourseDropdown>
+  </SearchFilterBar>
+
+  <AssignmentsTable>
+    <thead>
+      <tr>
+        <TableHeader onClick={() => handleSort('title')}>
+          <span>Assignment</span>
+          {sortBy === 'title' && <SortIcon $direction={sortDirection} />}
+        </TableHeader>
+        {/* Other headers */}
+      </tr>
+    </thead>
+    <tbody>
+      {sortedAssignments.map(assignment => (
+        <TableRow key={assignment.id}>
+          <TableCell>
+            <AssignmentInfo>
+              <AssignmentIcon><FiFileText /></AssignmentIcon>
+              <AssignmentDetails>
+                <AssignmentTitle>{assignment.title}</AssignmentTitle>
+                <AssignmentDescription>{assignment.description}</AssignmentDescription>
+              </AssignmentDetails>
+            </AssignmentInfo>
+          </TableCell>
+          {/* Other cells */}
+          <TableCell>
+            <StatusBadge $status={assignment.status}>
+              {getStatusIcon(assignment.status)}
+              <span>{getStatusText(assignment.status)}</span>
+            </StatusBadge>
+          </TableCell>
+          <TableCell>
+            <ActionButtons>
+              <ActionButton title="View Details"><FiEye /></ActionButton>
+              <ActionButton title="Edit Assignment"><FiEdit /></ActionButton>
+              {/* Conditional buttons based on status */}
+            </ActionButtons>
+          </TableCell>
+        </TableRow>
+      ))}
+    </tbody>
+  </AssignmentsTable>
+</AssignmentsContainer>
+```
+
+#### Assignment Creation Modal Pattern
+```tsx
+<Modal>
+  <ModalContent>
+    <ModalHeader>
+      <ModalTitle>Create New Assignment</ModalTitle>
+      <CloseButton onClick={() => setShowNewAssignmentModal(false)}>×</CloseButton>
+    </ModalHeader>
+    
+    <ModalBody>
+      <form onSubmit={handleSubmit}>
+        <FormGroup>
+          <FormLabel htmlFor="title">Assignment Title</FormLabel>
+          <FormInput
+            id="title"
+            name="title"
+            type="text"
+            placeholder="Enter assignment title"
+            value={formData.title}
+            onChange={handleFormChange}
+            $hasError={!!errors.title}
+          />
+          {errors.title && <FormError>{errors.title}</FormError>}
+        </FormGroup>
+        
+        <FormGroup>
+          <FormLabel htmlFor="description">Description</FormLabel>
+          <FormTextarea
+            id="description"
+            name="description"
+            placeholder="Enter assignment instructions"
+            value={formData.description}
+            onChange={handleFormChange}
+            $hasError={!!errors.description}
+            rows={4}
+          />
+          {errors.description && <FormError>{errors.description}</FormError>}
+        </FormGroup>
+        
+        <FormRow>
+          <FormGroup>
+            <FormLabel htmlFor="courseId">Course</FormLabel>
+            <FormSelect
+              id="courseId"
+              name="courseId"
+              value={formData.courseId}
+              onChange={handleFormChange}
+              $hasError={!!errors.courseId}
+            >
+              <option value="">Select a course</option>
+              {courses.map(course => (
+                <option key={course.id} value={course.id}>{course.name}</option>
+              ))}
+            </FormSelect>
+            {errors.courseId && <FormError>{errors.courseId}</FormError>}
+          </FormGroup>
+          
+          <FormGroup>
+            <FormLabel htmlFor="dueDate">Due Date</FormLabel>
+            <FormInput
+              id="dueDate"
+              name="dueDate"
+              type="datetime-local"
+              value={formData.dueDate}
+              onChange={handleFormChange}
+              $hasError={!!errors.dueDate}
+            />
+            {errors.dueDate && <FormError>{errors.dueDate}</FormError>}
+          </FormGroup>
+        </FormRow>
+        
+        <FormRow>
+          <FormGroup>
+            <FormLabel htmlFor="totalPoints">Total Points</FormLabel>
+            <FormInput
+              id="totalPoints"
+              name="totalPoints"
+              type="number"
+              min="0"
+              value={formData.totalPoints}
+              onChange={handleFormChange}
+              $hasError={!!errors.totalPoints}
+            />
+            {errors.totalPoints && <FormError>{errors.totalPoints}</FormError>}
+          </FormGroup>
+          
+          <FormGroup>
+            <FormLabel htmlFor="status">Status</FormLabel>
+            <FormSelect
+              id="status"
+              name="status"
+              value={formData.status}
+              onChange={handleFormChange}
+            >
+              <option value="draft">Save as Draft</option>
+              <option value="published">Publish Immediately</option>
+            </FormSelect>
+          </FormGroup>
+        </FormRow>
+        
+        <ModalFooter>
+          <SecondaryButton type="button" onClick={handleCancel}>Cancel</SecondaryButton>
+          <PrimaryButton type="submit">Create Assignment</PrimaryButton>
+        </ModalFooter>
+      </form>
+    </ModalBody>
+  </ModalContent>
+  <ModalBackdrop onClick={handleCancel} />
+</Modal>
+```
+
+#### Form Validation Pattern
+```tsx
+// Form validation state
+const [errors, setErrors] = useState<Partial<Record<keyof FormData, string>>>({});
+
+// Validate form
+const validateForm = (): boolean => {
+  const newErrors: Partial<Record<keyof FormData, string>> = {};
+  
+  if (!formData.title.trim()) {
+    newErrors.title = 'Title is required';
+  }
+  
+  if (!formData.description.trim()) {
+    newErrors.description = 'Description is required';
+  }
+  
+  if (!formData.courseId) {
+    newErrors.courseId = 'Please select a course';
+  }
+  
+  if (!formData.dueDate) {
+    newErrors.dueDate = 'Due date is required';
+  } else {
+    const selectedDate = new Date(formData.dueDate);
+    const today = new Date();
+    if (selectedDate < today) {
+      newErrors.dueDate = 'Due date cannot be in the past';
+    }
+  }
+  
+  if (formData.totalPoints <= 0) {
+    newErrors.totalPoints = 'Points must be greater than 0';
+  }
+  
+  setErrors(newErrors);
+  return Object.keys(newErrors).length === 0;
+};
+
+// Handle form change with error clearing
+const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const { name, value } = e.target;
+  setFormData(prev => ({
+    ...prev,
+    [name]: name === 'totalPoints' ? parseInt(value) || 0 : value
+  }));
+  
+  // Clear error for this field when user makes changes
+  if (errors[name as keyof FormData]) {
+    setErrors(prev => ({
+      ...prev,
+      [name]: undefined
+    }));
+  }
+};
 ```
 
 ### State Management Patterns
@@ -360,6 +760,139 @@ const groupedPermissions = permissions.reduce((groups, permission) => {
 />
 ```
 
+#### Multi-filter Management Pattern
+```tsx
+const [searchTerm, setSearchTerm] = useState('');
+const [filter, setFilter] = useState('all');
+const [selectedCourse, setSelectedCourse] = useState<string | null>(null);
+
+// Filter students based on multiple criteria
+const filteredStudents = students.filter(student => {
+  const matchesSearch = 
+    student.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    student.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    student.grade.toLowerCase().includes(searchTerm.toLowerCase());
+  
+  const matchesFilter = 
+    filter === 'all' || 
+    (filter === 'active' && student.status === 'active') ||
+    (filter === 'inactive' && student.status === 'inactive') ||
+    (filter === 'highPerformers' && student.performance >= 85) ||
+    (filter === 'needsHelp' && student.performance < 70);
+  
+  const matchesCourse = 
+    !selectedCourse || 
+    student.courses.includes(selectedCourse);
+  
+  return matchesSearch && matchesFilter && matchesCourse;
+});
+```
+
+#### Sortable Table Pattern
+```tsx
+const [sortBy, setSortBy] = useState<string>('name');
+const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+
+// Handle sorting
+const handleSort = (column: string) => {
+  if (sortBy === column) {
+    setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+  } else {
+    setSortBy(column);
+    setSortDirection('asc');
+  }
+};
+
+// Sort filtered students
+const sortedStudents = [...filteredStudents].sort((a, b) => {
+  // Sorting logic based on sortBy and sortDirection
+});
+```
+
+#### Calendar Date Management Pattern
+```tsx
+// Generate week days from current date
+const weekDays = getWeekDays(new Date(currentDate));
+
+// Handle previous week/month
+const handlePrevious = () => {
+  const newDate = new Date(currentDate);
+  if (viewMode === 'week') {
+    newDate.setDate(newDate.getDate() - 7);
+  } else {
+    newDate.setMonth(newDate.getMonth() - 1);
+  }
+  setCurrentDate(newDate);
+};
+
+// Handle next week/month
+const handleNext = () => {
+  const newDate = new Date(currentDate);
+  if (viewMode === 'week') {
+    newDate.setDate(newDate.getDate() + 7);
+  } else {
+    newDate.setMonth(newDate.getMonth() + 1);
+  }
+  setCurrentDate(newDate);
+};
+```
+
+#### View Mode Switching Pattern
+```tsx
+const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
+
+// In render:
+{viewMode === 'week' && (
+  <WeekCalendar>
+    {/* Week view content */}
+  </WeekCalendar>
+)}
+
+{viewMode === 'month' && (
+  <MonthViewMessage>
+    <FiInfo size={24} />
+    <p>Month view is currently under development. Please use the Week view for scheduling.</p>
+  </MonthViewMessage>
+)}
+```
+
+#### Time Slot Event Filtering Pattern
+```tsx
+const renderTimeSlots = () => {
+  return hours.map(hour => (
+    <TimeRow key={hour}>
+      <TimeLabel>{formatTime(hour)}</TimeLabel>
+      {weekDays.map((day, index) => {
+        const dayEvents = filteredEvents.filter(
+          event => event.day === index && event.startTime <= hour && event.endTime > hour
+        );
+        
+        return (
+          <TimeCell key={`${hour}-${index}`}>
+            {dayEvents.map(event => {
+              const isStart = event.startTime === hour;
+              const duration = event.endTime - event.startTime;
+              
+              // Only render at the start hour
+              if (!isStart) return null;
+              
+              return (
+                <ClassEvent 
+                  key={event.id}
+                  $color={event.color}
+                  $duration={duration}
+                  // ...other props
+                />
+              );
+            })}
+          </TimeCell>
+        );
+      })}
+    </TimeRow>
+  ));
+};
+```
+
 ### Styling Patterns
 
 #### Styled Components with Props
@@ -409,6 +942,29 @@ const ColorIndicator = styled.div<ColorProps>`
 `;
 ```
 
+#### Dynamic Height Calculation Pattern
+```tsx
+interface ClassEventProps {
+  $color: string;
+  $duration: number;
+}
+
+const ClassEvent = styled.div<ClassEventProps>`
+  background-color: ${props => `${props.$color}15`}; /* 15% opacity */
+  border-left: 3px solid ${props => props.$color};
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+  height: ${props => `calc(${props.$duration * 5}rem - 0.75rem)`};
+  cursor: pointer;
+  transition: all 0.2s ease;
+  overflow: hidden;
+  
+  &:hover {
+    background-color: ${props => `${props.$color}25`}; /* 25% opacity */
+  }
+`;
+```
+
 ## Component Relationships
 
 ### Admin Panel Component Tree
@@ -434,24 +990,79 @@ AdminLayout
 └── MobileOverlay (when in mobile view)
 ```
 
-### Data Page Component Structure
+### Teacher Panel Component Tree
 ```
-DataPage (Users/Subjects/Classes)
+TeacherLayout
+├── Sidebar (similar to Admin layout)
+│   ├── LogoContainer
+│   ├── MenuContainer
+│   │   ├── MenuItem (Dashboard)
+│   │   ├── MenuItem (Schedule)
+│   │   ├── MenuItem (Students)
+│   │   ├── MenuItem (Messages)
+│   │   └── MenuItem (Profile)
+│   └── ProfileSection
+├── MainContent
+│   ├── Header
+│   │   ├── SearchContainer
+│   │   └── HeaderActions
+│   ├── ContentWrapper
+│   │   └── [Page Content]
+│   └── Footer
+└── MobileOverlay (when in mobile view)
+```
+
+### Student Management Component Structure
+```
+TeacherStudents
 ├── PageHeader
 │   ├── TitleSection
-│   └── ActionButton (Add New)
-├── ControlPanel
-│   ├── SearchAndFilters
-│   │   ├── SearchInput
-│   │   └── FilterDropdowns
-│   └── ViewToggle (Classes only)
-├── DataDisplay
-│   ├── Table View
-│   │   ├── TableHeader
-│   │   └── TableRows
-│   └── OR Grid View (Classes)
-│       └── Cards
-└── Pagination
+│   └── ExportButton
+├── SearchFilterBar
+│   ├── SearchBox
+│   ├── FilterContainer
+│   │   └── FilterDropdown (Status filters)
+│   └── CourseDropdown
+├── StudentsTable
+│   ├── TableHeader (Sortable columns)
+│   └── TableRows
+│       ├── StudentInfo (Avatar, Name, Email)
+│       ├── GradeCell
+│       ├── CoursesList (Course chips)
+│       ├── AttendanceCell (Percentage)
+│       ├── PerformanceBar (Visual indicator)
+│       ├── StatusBadge
+│       └── ActionButtons
+└── EmptyState (When no students match filters)
+```
+
+### Assignment Management Component Structure
+```
+TeacherAssignments
+├── PageHeader
+│   ├── TitleSection
+│   └── ActionButtons (Export, New Assignment)
+├── SearchFilterBar
+│   ├── SearchBox
+│   ├── FilterContainer
+│   │   └── FilterDropdown (Status filters)
+│   └── CourseDropdown
+├── AssignmentsTable
+│   ├── TableHeader (Sortable columns)
+│   └── TableRows
+│       ├── AssignmentInfo (Icon, Title, Description)
+│       ├── CourseChip
+│       ├── DueDateCell
+│       ├── SubmissionsInfo (Count, Average)
+│       ├── StatusBadge
+│       └── ActionButtons
+├── EmptyState (When no assignments match filters)
+└── NewAssignmentModal (When creating a new assignment)
+    ├── ModalHeader
+    ├── Form
+    │   ├── FormFields (Title, Description, Course, etc.)
+    │   └── ValidationErrors
+    └── ModalFooter (Cancel, Create buttons)
 ```
 
 ### Component Communication

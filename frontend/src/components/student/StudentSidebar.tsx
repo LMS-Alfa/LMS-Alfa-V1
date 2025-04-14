@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiUsers, FiBook, FiSettings, FiHome, FiChevronLeft, FiChevronRight, FiLogOut, FiBriefcase, FiCalendar, FiMenu, FiX, FiShield, FiLayers, FiBarChart2, FiUser } from 'react-icons/fi';
+import { FiUsers, FiBook, FiSettings, FiHome, FiChevronLeft, FiChevronRight, FiLogOut, FiBriefcase, FiCalendar, FiMenu, FiX, FiShield, FiLayers, FiBarChart2, FiUser, FiFileText, FiVideo, FiBookOpen, FiAward, FiMessageSquare, FiCheckSquare, FiClipboard } from 'react-icons/fi';
 import LogoutButton from '../common/LogoutButton';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -57,7 +57,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ icon, label, to, isCollapsed }) => 
   );
 };
 
-const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, onMobileToggle }) => {
+const StudentSidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, onMobileToggle }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
   const { user } = useAuth();
@@ -104,42 +104,18 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, onMobileT
     return user?.fullName || user?.username || 'User';
   };
 
-  // Get user role from localStorage
-  const getUserRole = () => {
-    const userInfo = localStorage.getItem('lms_user');
-    if (userInfo) {
-      try {
-        const parsedInfo = JSON.parse(userInfo);
-        return parsedInfo.role || 'student';
-      } catch (error) {
-        console.error('Error parsing user info:', error);
-        return 'student';
-      }
-    }
-    return user?.role || 'student';
-  };
-
-  const role = getUserRole();
-  console.log('Detected user role:', role);
-
-  // Admin menu items
-  const adminMenu = [
-    { path: '/admin/dashboard', icon: <FiHome />, label: 'Dashboard' },
-    { path: '/admin/users', icon: <FiUsers />, label: 'User Management' },
-    { path: '/admin/roles', icon: <FiShield />, label: 'Role Management' },
-    { path: '/admin/subjects', icon: <FiBook />, label: 'Subjects' },
-    { path: '/admin/classes', icon: <FiLayers />, label: 'Classes' },
-    { path: '/admin/timetables', icon: <FiCalendar />, label: 'Timetables' },
-    { path: '/admin/settings', icon: <FiSettings />, label: 'Settings' },
-    { path: '/admin/profile', icon: <FiUser />, label: 'Profile' },
-  ];
-
-  // Teacher menu items
-  const teacherMenu = [
-    { path: '/teacher/dashboard', icon: <FiHome />, label: 'Dashboard' },
-    { path: '/teacher/students', icon: <FiUsers />, label: 'Students' },
-    { path: '/teacher/schedule', icon: <FiCalendar />, label: 'Schedule' },
-    { path: '/teacher/profile', icon: <FiUser />, label: 'Profile' },
+  // Student menu items
+  const studentMenu = [
+    { path: '/student/dashboard', icon: <FiHome />, label: 'Dashboard' },
+    { path: '/student/courses', icon: <FiBook />, label: 'My Courses' },
+    { path: '/student/lessons', icon: <FiVideo />, label: 'Lessons' },
+    { path: '/student/assignments', icon: <FiFileText />, label: 'Assignments' },
+    { path: '/student/schedule', icon: <FiCalendar />, label: 'Schedule' },
+    { path: '/student/messages', icon: <FiMessageSquare />, label: 'Messages' },
+    { path: '/student/tests', icon: <FiClipboard />, label: 'Tests' },
+    { path: '/student/flashcards', icon: <FiLayers />, label: 'Flashcards' },
+    { path: '/student/profile', icon: <FiUser />, label: 'Profile' },
+    { path: '/student/settings', icon: <FiSettings />, label: 'Settings' },
   ];
 
   return (
@@ -190,54 +166,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, onMobileT
 
             <MenuContainer>
               <MenuSection>
-                {role === 'admin' && (
-                  <>
-                    {adminMenu.map((item) => (
-                      <MenuItem 
-                        key={item.path}
-                        icon={item.icon} 
-                        label={item.label} 
-                        to={item.path} 
-                        isCollapsed={isMobile ? false : isCollapsed} 
-                      />
-                    ))}
-                  </>
-                )}
-                {role === 'teacher' && (
-                  <>
-                    {teacherMenu.map((item) => (
-                      <MenuItem 
-                        key={item.path}
-                        icon={item.icon} 
-                        label={item.label} 
-                        to={item.path} 
-                        isCollapsed={isMobile ? false : isCollapsed} 
-                      />
-                    ))}
-                  </>
-                )}
-              </MenuSection>
-
-              <MenuSection>
-                <AnimatePresence>
-                  {(!isCollapsed || isMobile) && (
-                    <SectionLabel
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ delay: 0.2 }}
-                    >
-                      System
-                    </SectionLabel>
-                  )}
-                </AnimatePresence>
-
-                <MenuItem 
-                  icon={<FiSettings />} 
-                  label="Settings" 
-                  to={`/${role}/settings`}
-                  isCollapsed={isMobile ? false : isCollapsed} 
-                />
+                {studentMenu.map((item) => (
+                  <MenuItem 
+                    key={item.path}
+                    icon={item.icon} 
+                    label={item.label} 
+                    to={item.path} 
+                    isCollapsed={isMobile ? false : isCollapsed}
+                  />
+                ))}
               </MenuSection>
             </MenuContainer>
 
@@ -254,7 +191,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, onMobileT
                     transition={{ duration: 0.2 }}
                   >
                     <ProfileName>{getFullName()}</ProfileName>
-                    <ProfileRole>{role === 'admin' ? 'Admin' : role === 'teacher' ? 'Teacher' : 'Student'}</ProfileRole>
+                    <ProfileRole>Student</ProfileRole>
                   </ProfileInfo>
                 )}
               </AnimatePresence>
@@ -310,6 +247,10 @@ const SidebarContainer = styled(motion.aside)<CollapsibleProps>`
     return $isCollapsed ? '80px' : '280px';
   }};
   transition: width ${props => props.theme.transition.normal} ease;
+  
+  @media (max-width: ${props => props.theme.breakpoints.lg}) {
+    position: fixed;
+  }
 `;
 
 const MobileOverlay = styled.div`
@@ -399,7 +340,7 @@ const ToggleButton = styled.button`
   border-radius: 8px;
   border: none;
   background-color: ${props => props.theme.colors.background.tertiary};
-  color: ${props => props.theme.colors.primary[600]};
+  color: ${props => props.theme.colors.primary};
   cursor: pointer;
   transition: all ${props => props.theme.transition.fast};
   margin-left: 0.5rem;
@@ -409,8 +350,7 @@ const ToggleButton = styled.button`
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   
   &:hover {
-    background-color: ${props => props.theme.colors.primary[100]};
-    color: ${props => props.theme.colors.primary[700]};
+    background-color: ${props => props.theme.colors.background.hover};
   }
 `;
 
@@ -418,7 +358,7 @@ const CloseButton = styled(ToggleButton)`
   color: ${props => props.theme.colors.text.secondary};
   
   &:hover {
-    color: ${props => props.theme.colors.accent.red};
+    color: ${props => props.theme.colors.text.primary};
   }
 `;
 
@@ -437,15 +377,6 @@ const MenuSection = styled.div`
   gap: ${props => props.theme.spacing[1]};
 `;
 
-const SectionLabel = styled(motion.div)`
-  font-size: ${props => props.theme.spacing[3]};
-  font-weight: 600;
-  color: ${props => props.theme.colors.text.tertiary};
-  padding: 0 ${props => props.theme.spacing[4]};
-  margin-top: ${props => props.theme.spacing[4]};
-  margin-bottom: ${props => props.theme.spacing[2]};
-`;
-
 interface MenuItemContainerProps {
   $isActive: boolean;
   $isCollapsed: boolean;
@@ -458,7 +389,7 @@ const MenuItemContainer = styled(NavLink)<MenuItemContainerProps>`
   position: relative;
   text-decoration: none;
   color: ${props => props.$isActive 
-    ? props.theme.colors.primary[600]
+    ? props.theme.colors.primary
     : props.theme.colors.text.secondary
   };
   font-weight: ${props => props.$isActive ? '600' : '400'};
@@ -466,12 +397,16 @@ const MenuItemContainer = styled(NavLink)<MenuItemContainerProps>`
   transition: all ${props => props.theme.transition.fast};
   
   &:hover {
-    background-color: ${props => props.theme.colors.background.tertiary};
+    background-color: ${props => props.theme.colors.background.hover};
     color: ${props => props.$isActive 
-      ? props.theme.colors.primary[600]
+      ? props.theme.colors.primary
       : props.theme.colors.text.primary
     };
   }
+  
+  ${({ $isActive, theme }) => $isActive && css`
+    background-color: ${theme.colors.background.hover};
+  `}
   
   ${({ $isCollapsed }) => $isCollapsed && css`
     justify-content: center;
@@ -499,8 +434,9 @@ const ActiveIndicator = styled(motion.div)`
   left: 0;
   width: 4px;
   height: 100%;
-  background-color: ${props => props.theme.colors.primary[600]};
+  background-color: ${props => props.theme.colors.primary};
   border-radius: 0 ${props => props.theme.borderRadius.sm} ${props => props.theme.borderRadius.sm} 0;
+  box-shadow: 0 0 4px ${props => props.theme.colors.primary}80;
 `;
 
 const ProfileSection = styled.div<CollapsibleProps>`
@@ -520,7 +456,7 @@ const ProfileImage = styled.div`
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background-color: ${props => props.theme.colors.primary[500]};
+  background-color: ${props => props.theme.colors.primary[600]};
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -560,9 +496,9 @@ const SidebarLogoutButton = styled(LogoutButton)`
   
   &:hover {
     svg {
-      color: ${props => props.theme.colors.danger[500]};
+      color: ${props => props.theme.colors.danger};
     }
   }
 `;
 
-export default Sidebar;
+export default StudentSidebar; 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FiX, FiUser, FiMail, FiKey, FiShield, FiCalendar } from 'react-icons/fi';
+import { FiX, FiUser, FiMail, FiLock, FiShield, FiCalendar } from 'react-icons/fi';
 
 // User interface matching the one in Users.tsx
 interface User {
@@ -226,7 +226,7 @@ const UserForm: React.FC<UserFormProps> = ({
               <>
                 <FormGroup>
                   <FormLabel htmlFor="password">
-                    <FiKey />
+                    <FiLock />
                     <span>Password</span>
                   </FormLabel>
                   <FormInput
@@ -243,7 +243,7 @@ const UserForm: React.FC<UserFormProps> = ({
                 
                 <FormGroup>
                   <FormLabel htmlFor="confirmPassword">
-                    <FiKey />
+                    <FiLock />
                     <span>Confirm Password</span>
                   </FormLabel>
                   <FormInput
