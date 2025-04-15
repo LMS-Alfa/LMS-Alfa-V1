@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FiSearch, FiPlus, FiEdit2, FiTrash2, FiMoreVertical, FiFilter, FiDownload, FiBook } from 'react-icons/fi';
+import { FiSearch, FiEdit2, FiTrash2, FiMoreVertical, FiFilter, FiDownload, FiBook } from 'react-icons/fi';
 import { Subject } from '../../types/Subject';
 
 // Mock data for development
@@ -83,11 +83,11 @@ const Subjects: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDepartment, setFilterDepartment] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<string>('');
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [selectedSubjects, setSelectedSubjects] = useState<string[]>([]);
   const [isActionsMenuOpen, setIsActionsMenuOpen] = useState(false);
-  const [isFormOpen, setIsFormOpen] = useState(false);
-  const [currentSubject, setCurrentSubject] = useState<Subject | null>(null);
+  const [_isFormOpen, setIsFormOpen] = useState(false);
+  const [_currentSubject, setCurrentSubject] = useState<Subject | null>(null);
   
   // Filter subjects based on search term and filters
   const filteredSubjects = mockSubjects.filter(subject => {
@@ -160,21 +160,21 @@ const Subjects: React.FC = () => {
   };
   
   // Handle form submission
-  const handleFormSubmit = (subjectData: Subject) => {
-    if (currentSubject) {
-      // Update existing subject
-      console.log('Updating subject:', subjectData);
-    } else {
-      // Create new subject
-      console.log('Creating new subject:', subjectData);
-    }
-    setIsFormOpen(false);
-  };
+  // const handleFormSubmit = (subjectData: Subject) => {
+  //   if (currentSubject) {
+  //     // Update existing subject
+  //     console.log('Updating subject:', subjectData);
+  //   } else {
+  //     // Create new subject
+  //     console.log('Creating new subject:', subjectData);
+  //   }
+  //   setIsFormOpen(false);
+  // };
   
-  const handleFormClose = () => {
-    setIsFormOpen(false);
-    setCurrentSubject(null);
-  };
+  // const handleFormClose = () => {
+  //   setIsFormOpen(false);
+  //   setCurrentSubject(null);
+  // };
 
   return (
     <SubjectsContainer

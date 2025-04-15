@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiUsers, FiBook, FiSettings, FiHome, FiChevronLeft, FiChevronRight, FiLogOut, FiBriefcase, FiCalendar, FiMenu, FiX, FiShield, FiLayers, FiBarChart2, FiUser } from 'react-icons/fi';
+import { FiUsers, FiBook, FiSettings, FiHome, FiChevronLeft, FiChevronRight, FiCalendar, FiMenu, FiX, FiShield, FiLayers, FiUser } from 'react-icons/fi';
 import LogoutButton from '../common/LogoutButton';
 import { useAuth } from '../../contexts/AuthContext';
 

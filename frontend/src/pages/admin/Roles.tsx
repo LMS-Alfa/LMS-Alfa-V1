@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FiSearch, FiPlus, FiEdit2, FiTrash2, FiMoreVertical, FiFilter, FiDownload, FiLock, FiShield } from 'react-icons/fi';
+import { FiSearch, FiEdit2, FiTrash2, FiMoreVertical, FiDownload, FiLock, FiShield } from 'react-icons/fi';
 import RoleForm from '../../components/admin/RoleForm';
 import PermissionsModal from '../../components/admin/PermissionsModal';
 
@@ -97,7 +97,7 @@ const mockRoles: Role[] = [
 const Roles: React.FC = () => {
   // State for search, filters, and selected roles
   const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [currentPage, setCurrentPage] = useState(1);
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentRole, setCurrentRole] = useState<Role | null>(null);
@@ -623,7 +623,11 @@ const EmptyStateRow = styled.div`
   padding: ${props => `${props.theme.spacing[6]} ${props.theme.spacing[4]}`};
 `;
 
-const EmptyStateCell = styled.div`
+interface EmptyStateCellProps {
+  colSpan?: number;
+}
+
+const EmptyStateCell = styled.div<EmptyStateCellProps>`
   text-align: center;
 `;
 
@@ -743,14 +747,14 @@ const PageButton = styled.button<PageButtonProps>`
   }
 `;
 
-const PageButtonEllipsis = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  font-size: 0.85rem;
-  color: ${props => props.theme.colors.text.secondary};
-`;
+// const PageButtonEllipsis = styled.div`
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   width: 32px;
+//   height: 32px;
+//   font-size: 0.85rem;
+//   color: ${props => props.theme.colors.text.secondary};
+// `;
 
 export default Roles; 

@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import { FiCalendar, FiClock, FiBook, FiAward, FiCheckCircle, FiFileText } from 'react-icons/fi';
+import { FiCalendar, FiClock, FiBook } from 'react-icons/fi';
 import Card from '../../components/common/Card';
 
 const StudentDashboard: React.FC = () => {

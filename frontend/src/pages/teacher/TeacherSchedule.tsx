@@ -6,7 +6,7 @@ import {
   FiChevronLeft, FiChevronRight, FiInfo, FiBook,
   FiUsers, FiMapPin
 } from 'react-icons/fi';
-import { useAuth } from '../../contexts/AuthContext';
+// import { useAuth } from '../../contexts/AuthContext';
 
 // Helper functions
 const getWeekDays = (date: Date): Date[] => {
@@ -57,7 +57,7 @@ interface FilterOptionProps {
 }
 
 const TeacherSchedule: React.FC = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [viewMode, setViewMode] = useState<'week' | 'month'>('week');
   const [showFilters, setShowFilters] = useState(false);
@@ -197,7 +197,7 @@ const TeacherSchedule: React.FC = () => {
     return hours.map(hour => (
       <TimeRow key={hour}>
         <TimeLabel>{formatTime(hour)}</TimeLabel>
-        {weekDays.map((day, index) => {
+        {weekDays.map((_day, index) => {
           const dayEvents = filteredEvents.filter(
             event => event.day === index && event.startTime <= hour && event.endTime > hour
           );

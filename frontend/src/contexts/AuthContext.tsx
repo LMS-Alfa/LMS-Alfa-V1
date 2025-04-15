@@ -117,7 +117,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   // Update user password
-  const updatePassword = (currentPassword: string, newPassword: string): boolean => {
+  const updatePassword = (currentPassword: string, _newPassword: string): boolean => {
     // In a real app, this would verify the current password and update to the new one
     // For this demo, we'll just check if the current password matches the demo password
     if (currentPassword === '123456') {

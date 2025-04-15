@@ -2,12 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  FiSearch, FiSend, FiMoreVertical, FiPaperclip, 
-  FiImage, FiFile, FiSmile, FiPlus, FiX, FiCheck,
-  FiUser, FiUsers, FiMessageSquare, FiChevronLeft,
-  FiChevronRight, FiPhone, FiVideo, FiInfo
+  FiSearch, FiSend,  FiPaperclip, 
+  FiImage, FiFile, FiSmile, FiPlus,  FiCheck,
+   FiUsers, FiMessageSquare, FiChevronLeft,
+  FiPhone, FiVideo, FiInfo
 } from 'react-icons/fi';
-import { useAuth } from '../../contexts/AuthContext';
+// import { useAuth } from '../../contexts/AuthContext';
 
 // Types
 interface Message {
@@ -46,8 +46,12 @@ interface Participant {
   lastActive?: Date;
 }
 
+interface MessageTimeProps {
+  $isCurrentUser: boolean;
+}
+
 const TeacherMessages: React.FC = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const [activeConversation, setActiveConversation] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [messageText, setMessageText] = useState('');
@@ -474,7 +478,7 @@ const TeacherMessages: React.FC = () => {
                     </ConversationDetails>
                     
                     <ConversationMeta>
-                      <MessageTime>
+                      <MessageTime $isCurrentUser={false}>
                         {formatMessageTime(conversation.lastMessage.timestamp)}
                       </MessageTime>
                       {conversation.unreadCount > 0 && (
@@ -850,7 +854,11 @@ const ConversationMeta = styled.div`
   margin-left: 0.5rem;
 `;
 
-const MessageTime = styled.div`
+interface MessageTimeProps {
+  $isCurrentUser: boolean;
+}
+
+const MessageTime = styled.div<MessageTimeProps>`
   font-size: 0.7rem;
   color: ${props => props.theme.colors.text.tertiary};
   margin-bottom: 0.25rem;

@@ -1,8 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiSearch, FiPlus, FiMoreVertical, FiSend, FiPaperclip, FiSmile, FiMic, FiUser, FiChevronLeft, FiFilter, FiInfo } from 'react-icons/fi';
-import Card from '../../components/common/Card';
+import { FiSearch, FiPlus, FiMoreVertical, FiSend, FiPaperclip, FiSmile, FiChevronLeft, FiFilter, FiInfo } from 'react-icons/fi';
+// import Card from '../../components/common/Card';
 import { useAuth } from '../../contexts/AuthContext';
 
 interface Message {
@@ -151,7 +151,7 @@ const Messages: React.FC = () => {
         id: `${conversationId}-2`,
         content: `Hi ${recipient.name}, I have a question about the recent assignment.`,
         sender: {
-          id: user?.id || 'current-user',
+          id: user?.username || 'current-user',
           name: user?.fullName || 'You',
         },
         timestamp: new Date(Date.now() - 2.9 * 60 * 60 * 1000),
@@ -173,7 +173,7 @@ const Messages: React.FC = () => {
         id: `${conversationId}-4`,
         content: `I'm not sure how to approach problem number 5.`,
         sender: {
-          id: user?.id || 'current-user',
+          id: user?.username || 'current-user',
           name: user?.fullName || 'You',
         },
         timestamp: new Date(Date.now() - 2.7 * 60 * 60 * 1000),

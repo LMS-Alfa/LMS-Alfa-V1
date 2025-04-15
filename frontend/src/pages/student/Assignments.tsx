@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FiFileText, FiCalendar, FiClock, FiSearch, FiChevronDown, FiCheckCircle, FiAlertCircle, FiPaperclip, FiUpload, FiLink } from 'react-icons/fi';
+import { FiFileText, FiCalendar, FiClock, FiSearch, FiChevronDown, FiCheckCircle,  FiPaperclip, FiUpload,} from 'react-icons/fi';
 import Card from '../../components/common/Card';
 
 // Get status color - moved outside component
@@ -388,7 +388,7 @@ const Assignments: React.FC = () => {
                 {assignment.grade !== null && (
                   <GradeDisplay $grade={assignment.grade}>
                     <GradeLabel>Grade:</GradeLabel>
-                    <GradeValue>{assignment.grade}%</GradeValue>
+                    <GradeValue $grade={assignment.grade}>{assignment.grade}%</GradeValue>
                   </GradeDisplay>
                 )}
               </CompletedSection>

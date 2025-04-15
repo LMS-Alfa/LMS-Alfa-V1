@@ -2,10 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  FiUsers, FiBook, FiBriefcase, FiCalendar, FiTrendingUp, 
-  FiActivity, FiAward, FiPieChart, FiRefreshCw, FiClock, 
-  FiDownload, FiBarChart2, FiCheckCircle, FiAlertCircle, 
-  FiHelpCircle, FiDollarSign, FiInbox, FiCpu, FiDatabase,
+  FiUsers, FiBook, FiBriefcase, FiCalendar, 
+  FiAward, FiPieChart, FiRefreshCw, FiClock, 
+  FiBarChart2, FiCheckCircle, FiAlertCircle, 
+  FiHelpCircle, FiCpu, FiDatabase,
   FiBell, FiClipboard, FiStar, FiUserCheck, FiUserX, FiInfo
 } from 'react-icons/fi';
 import { DefaultTheme } from 'styled-components';

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FiCalendar, FiClock, FiUser, FiMapPin, FiPlus, FiChevronLeft, FiChevronRight, FiFilter, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
-import { TimeSlot, TimetableDay } from '../../types/Timetable';
+import { FiCalendar, FiClock, FiUser, FiMapPin, FiPlus, FiChevronLeft, FiChevronRight, FiSearch, FiEdit, FiTrash2 } from 'react-icons/fi';
+import { TimeSlot } from '../../types/Timetable';
 
 // Time slots from 8:00 to 18:00 with 1-hour intervals
 const timeSlots = [
@@ -132,11 +132,11 @@ const groupClassesByDay = (classes: TimeSlot[]): Record<string, TimeSlot[]> => {
 
 const Timetables: React.FC = () => {
   const [currentWeek, setCurrentWeek] = useState<string>('May 20 - May 24, 2023');
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot | null>(null);
+  const [_selectedTimeSlot, setSelectedTimeSlot] = useState<TimeSlot | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [filterTeacher, setFilterTeacher] = useState('');
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [viewMode, setViewMode] = useState<'week' | 'list'>('week');
+  const [_isAddModalOpen, setIsAddModalOpen] = useState(false);
+  // const [viewMode, setViewMode] = useState<'week' | 'list'>('week');
   
   // Filter classes based on search and filters
   const filteredClasses = mockClasses.filter(cls => {
@@ -265,7 +265,7 @@ const Timetables: React.FC = () => {
         {/* Time column */}
         <TimeColumn>
           <DayHeader>Time</DayHeader>
-          {timeSlots.map((time, index) => (
+          {timeSlots.map((time, _index) => (
             <TimeSlotCell key={time}>
               {time}
             </TimeSlotCell>
@@ -278,7 +278,7 @@ const Timetables: React.FC = () => {
             <DayHeader>{day}</DayHeader>
             <DayContent>
               {/* Render hour grid lines */}
-              {timeSlots.map((time, index) => (
+              {timeSlots.map((time, _index) => (
                 <HourGridLine key={time} />
               ))}
               

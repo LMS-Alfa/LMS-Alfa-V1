@@ -4,23 +4,24 @@ import { motion } from 'framer-motion';
 import { 
   FiSearch, FiFilter, FiDownload, FiMail, 
   FiChevronDown, FiUsers, FiCheckCircle, FiXCircle,
-  FiUser, FiEdit, FiEye, FiMoreVertical, FiBook
+   FiEdit, FiEye,  FiBook
 } from 'react-icons/fi';
-import { useAuth } from '../../contexts/AuthContext';
+// import { useAuth } from '../../contexts/AuthContext';
 
 // Safe theme access helper function
-const getThemeValue = (path: string[], fallback: string) => (props: any) => {
-  try {
-    let value = props.theme;
-    for (const key of path) {
-      value = value[key];
-      if (value === undefined) return fallback;
-    }
-    return value;
-  } catch (e) {
-    return fallback;
-  }
-};
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// const getThemeValue = (path: string[], fallback: string) => (props: any) => {
+//   try {
+//     let value = props.theme;
+//     for (const key of path) {
+//       value = value[key];
+//       if (value === undefined) return fallback;
+//     }
+//     return value;
+//   } catch (e) {
+//     return fallback;
+//   }
+// };
 
 interface Student {
   id: number;
@@ -56,7 +57,7 @@ interface StatusBadgeProps {
 }
 
 const TeacherStudents: React.FC = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('all');
   const [showFilters, setShowFilters] = useState(false);

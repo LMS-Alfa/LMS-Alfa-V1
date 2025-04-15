@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiSearch, FiGrid, FiList, FiPlus, FiFilter, FiCalendar, FiClock, FiUsers, FiBook, FiEdit, FiTrash2, FiMoreHorizontal } from 'react-icons/fi';
+import { FiSearch, FiGrid, FiList, FiPlus, FiCalendar, FiClock, FiUsers, FiBook, FiEdit, FiTrash2, FiMoreHorizontal } from 'react-icons/fi';
 import { Class } from '../../types/Class';
 
 // Mock data for development
@@ -110,7 +110,8 @@ const Classes: React.FC = () => {
   const [filterSubject, setFilterSubject] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<string>('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [selectedClass, setSelectedClass] = useState<Class | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_selectedClass, setSelectedClass] = useState<Class | null>(null);
   const [isActionsMenuOpen, setIsActionsMenuOpen] = useState<string | null>(null);
 
   // Filter classes based on search term and filters
@@ -145,9 +146,9 @@ const Classes: React.FC = () => {
   };
 
   // Toggle view mode
-  const toggleViewMode = () => {
-    setViewMode(viewMode === 'grid' ? 'list' : 'grid');
-  };
+  // const toggleViewMode = () => {
+  //   setViewMode(viewMode === 'grid' ? 'list' : 'grid');
+  // };
 
   // Toggle actions menu
   const toggleActionsMenu = (classId: string) => {

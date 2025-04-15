@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FiSearch, FiPlus, FiEdit2, FiTrash2, FiMoreVertical, FiFilter, FiDownload, FiUserPlus } from 'react-icons/fi';
-import { useUsers } from '../../hooks/useUsers';
-import { User } from '../../types/User';
+import { FiSearch, FiEdit2, FiTrash2, FiMoreVertical, FiFilter, FiDownload, FiUserPlus } from 'react-icons/fi';
+import { User as UserType } from '../../types/User';
 import UserForm from '../../components/admin/UserForm';
 
 // User interface
-interface User {
+interface User extends UserType {
   id: string;
   name: string;
   email: string;
@@ -86,13 +85,13 @@ const mockUsers: User[] = [
 
 const Users: React.FC = () => {
   // State for search, filters, and selected users
-  const [searchQuery, setSearchQuery] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  // const [searchQuery, setSearchQuery] = useState('');
+  // const [currentPage, setCurrentPage] = useState(1);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   
-  const { users, loading, error } = useUsers();
+  // const { users, loading, error } = useUsers();
 
   // State for search, filters, and selected users
   const [searchTerm, setSearchTerm] = useState('');
@@ -170,7 +169,7 @@ const Users: React.FC = () => {
   };
   
   // Handle form submission
-  const handleFormSubmit = (userData: User) => {
+  const handleFormSubmit = (userData: Partial<User>) => {
     if (currentUser) {
       // Update existing user
       console.log('Updating user:', userData);

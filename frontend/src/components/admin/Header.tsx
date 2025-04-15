@@ -1,14 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import { FiBell, FiSearch, FiLogOut, FiSettings, FiUser, FiChevronDown } from 'react-icons/fi';
-import { useThemeContext } from '../../App';
+import { FiBell, FiSearch, FiSettings, FiUser, FiChevronDown } from 'react-icons/fi';
+// import { useThemeContext } from '../../App';
 import { useAuth } from '../../contexts/AuthContext';
 import { Link } from 'react-router-dom';
 import LogoutButton from '../common/LogoutButton';
 
 const Header: React.FC = () => {
-  const { isDarkMode } = useThemeContext();
-  const { user, logout } = useAuth();
+  // const { isDarkMode } = useThemeContext();
+  const { user } = useAuth();
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   
@@ -116,7 +116,6 @@ const Header: React.FC = () => {
                 variant="secondary" 
                 size="medium" 
                 text="Log out"
-                onClick={handleCloseUserMenu}
               />
             </UserMenu>
           )}

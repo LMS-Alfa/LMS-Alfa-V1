@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { FiX, FiInfo } from 'react-icons/fi';
 
 // Role interface
@@ -263,18 +263,18 @@ interface InputProps {
 const Input = styled.input<InputProps>`
   padding: ${props => props.theme.spacing[2]} ${props => props.theme.spacing[3]};
   border: 1px solid ${props => props.$hasError 
-    ? props.theme.colors.error.main 
+    ? props.theme.colors.danger[500] 
     : props.theme.colors.border.light};
   border-radius: ${props => props.theme.borderRadius.md};
   font-size: 0.9rem;
   background-color: ${props => props.$hasError 
-    ? props.theme.colors.error.lighter
+    ? props.theme.colors.danger[50]
     : 'white'};
   
   &:focus {
     outline: none;
     border-color: ${props => props.$hasError 
-      ? props.theme.colors.error.main
+      ? props.theme.colors.danger[500]
       : props.theme.colors.primary[400]};
     box-shadow: 0 0 0 3px ${props => props.$hasError 
       ? 'rgba(244, 63, 94, 0.1)'
@@ -285,20 +285,20 @@ const Input = styled.input<InputProps>`
 const TextArea = styled.textarea<InputProps>`
   padding: ${props => props.theme.spacing[2]} ${props => props.theme.spacing[3]};
   border: 1px solid ${props => props.$hasError 
-    ? props.theme.colors.error.main 
+    ? props.theme.colors.danger[500] 
     : props.theme.colors.border.light};
   border-radius: ${props => props.theme.borderRadius.md};
   font-size: 0.9rem;
   resize: vertical;
   font-family: inherit;
   background-color: ${props => props.$hasError 
-    ? props.theme.colors.error.lighter
+    ? props.theme.colors.danger[50]
     : 'white'};
   
   &:focus {
     outline: none;
     border-color: ${props => props.$hasError 
-      ? props.theme.colors.error.main
+      ? props.theme.colors.danger[500]
       : props.theme.colors.primary[400]};
     box-shadow: 0 0 0 3px ${props => props.$hasError 
       ? 'rgba(244, 63, 94, 0.1)'
@@ -308,7 +308,7 @@ const TextArea = styled.textarea<InputProps>`
 
 const ErrorMessage = styled.div`
   font-size: 0.8rem;
-  color: ${props => props.theme.colors.error.main};
+  color: ${props => props.theme.colors.danger[500]};
   margin-top: ${props => props.theme.spacing[1]};
 `;
 
@@ -317,12 +317,12 @@ const InfoBox = styled.div`
   align-items: flex-start;
   gap: ${props => props.theme.spacing[2]};
   padding: ${props => props.theme.spacing[3]};
-  background-color: ${props => props.theme.colors.info.lighter};
+  background-color: ${props => props.theme.colors.primary[50]};
   border-radius: ${props => props.theme.borderRadius.md};
-  border-left: 4px solid ${props => props.theme.colors.info.main};
+  border-left: 4px solid ${props => props.theme.colors.primary[500]};
   
   svg {
-    color: ${props => props.theme.colors.info.main};
+    color: ${props => props.theme.colors.primary[500]};
     margin-top: 2px;
   }
 `;
@@ -330,7 +330,7 @@ const InfoBox = styled.div`
 const InfoText = styled.p`
   margin: 0;
   font-size: 0.85rem;
-  color: ${props => props.theme.colors.info.dark};
+  color: ${props => props.theme.colors.primary[700]};
 `;
 
 const ModalFooter = styled.div`

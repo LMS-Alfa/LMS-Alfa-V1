@@ -4,10 +4,10 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { 
   FiSearch, FiFilter, FiPlus, FiUsers, FiBook,
-  FiCalendar, FiBarChart2, FiDownload, FiMoreVertical,
-  FiEdit, FiTrash2, FiEye, FiX, FiCheck
+  FiCalendar, FiBarChart2,  FiMoreVertical,
+  FiEdit, FiTrash2, FiEye, 
 } from 'react-icons/fi';
-import { useAuth } from '../../contexts/AuthContext';
+// import { useAuth } from '../../contexts/AuthContext';
 
 interface Course {
   id: number;
@@ -22,7 +22,7 @@ interface Course {
 }
 
 const TeacherCourses: React.FC = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('all');

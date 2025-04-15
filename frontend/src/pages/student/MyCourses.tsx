@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FiBook, FiCalendar, FiClock, FiSearch, FiFilter, FiUser } from 'react-icons/fi';
+import { FiBook, FiCalendar,  FiSearch, FiUser } from 'react-icons/fi';
 import Card from '../../components/common/Card';
 
 const MyCourses: React.FC = () => {

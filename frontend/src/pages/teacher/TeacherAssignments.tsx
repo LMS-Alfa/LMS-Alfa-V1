@@ -7,7 +7,7 @@ import {
   FiFileText, FiBook, FiCheckSquare, FiAlertCircle,
   FiEye, FiEdit, FiTrash2, FiShare2
 } from 'react-icons/fi';
-import { useAuth } from '../../contexts/AuthContext';
+// import { useAuth } from '../../contexts/AuthContext';
 
 // Interface definitions
 interface Assignment {
@@ -43,7 +43,7 @@ interface StatusBadgeProps {
 }
 
 const TeacherAssignments: React.FC = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [filter, setFilter] = useState('all');
   const [showFilters, setShowFilters] = useState(false);

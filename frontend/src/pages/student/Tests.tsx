@@ -425,7 +425,7 @@ const TestCard = styled.div<{ status: string }>`
     switch (status) {
       case 'upcoming': return theme.colors.primary;
       case 'completed': return theme.colors.success;
-      case 'missed': return theme.colors.error;
+      case 'missed': return theme.colors.danger[500];
       default: return theme.colors.border;
     }
   }};
@@ -460,7 +460,7 @@ const TestType = styled.span<{ type: string }>`
   background: ${({ type, theme }) => {
     switch (type) {
       case 'quiz': return `${theme.colors.warning}20`;
-      case 'exam': return `${theme.colors.error}20`;
+      case 'exam': return `${theme.colors.danger[500]}20`;
       case 'assignment': return `${theme.colors.primary}20`;
       default: return theme.colors.border;
     }
@@ -468,7 +468,7 @@ const TestType = styled.span<{ type: string }>`
   color: ${({ type, theme }) => {
     switch (type) {
       case 'quiz': return theme.colors.warning;
-      case 'exam': return theme.colors.error;
+      case 'exam': return theme.colors.danger[500];
       case 'assignment': return theme.colors.primary;
       default: return theme.colors.text.primary;
     }
@@ -540,12 +540,12 @@ const TestScore = styled.div<{ score: number }>`
   background: ${({ score, theme }) => {
     if (score >= 80) return `${theme.colors.success}20`;
     if (score >= 60) return `${theme.colors.warning}20`;
-    return `${theme.colors.error}20`;
+    return `${theme.colors.danger[500]}20`;
   }};
   color: ${({ score, theme }) => {
     if (score >= 80) return theme.colors.success;
     if (score >= 60) return theme.colors.warning;
-    return theme.colors.error;
+    return theme.colors.danger[500];
   }};
 `;
 

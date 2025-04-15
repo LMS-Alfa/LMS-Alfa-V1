@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiSearch, FiPlus, FiStar, FiFilter, FiChevronLeft, FiChevronRight, FiX, FiCheck, FiRotateCcw, FiEdit, FiTrash2, FiShare2 } from 'react-icons/fi';
+import { motion } from 'framer-motion';
+import { FiSearch, FiPlus, FiFilter, FiChevronLeft, FiChevronRight, FiX, FiCheck, FiEdit, FiShare2 } from 'react-icons/fi';
 
 interface Flashcard {
   id: string;

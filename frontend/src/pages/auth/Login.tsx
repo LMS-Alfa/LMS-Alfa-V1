@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import styled from 'styled-components';
-import { FiUser, FiLock, FiArrowLeft, FiChevronRight } from 'react-icons/fi';
+import { FiUser,  FiArrowLeft, FiChevronRight } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 
 // Define user roles

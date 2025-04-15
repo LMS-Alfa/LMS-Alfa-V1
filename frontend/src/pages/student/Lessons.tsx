@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FiVideo, FiFile, FiClock, FiSearch, FiFilter, FiChevronDown, FiBook, FiCheckCircle, FiPlay, FiFileText, FiDownload } from 'react-icons/fi';
+import { FiVideo, FiFile, FiClock, FiSearch,  FiChevronDown, FiBook, FiCheckCircle, FiPlay, FiFileText, FiDownload } from 'react-icons/fi';
 import Card from '../../components/common/Card';
 
 const Lessons: React.FC = () => {

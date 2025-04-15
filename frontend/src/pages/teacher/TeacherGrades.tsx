@@ -7,7 +7,7 @@ import {
   FiCheckCircle, FiXCircle, FiAlertCircle,
   FiFileText
 } from 'react-icons/fi';
-import { useAuth } from '../../contexts/AuthContext';
+// import { useAuth } from '../../contexts/AuthContext';
 
 // Interface definitions
 interface Student {
@@ -61,7 +61,7 @@ interface StatusBadgeProps {
 }
 
 const TeacherGrades: React.FC = () => {
-  const { user } = useAuth();
+  // const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCourse, setSelectedCourse] = useState<number | null>(null);
   const [selectedAssignment, setSelectedAssignment] = useState<number | null>(null);
@@ -286,7 +286,7 @@ const TeacherGrades: React.FC = () => {
   };
 
   // Handle save grade
-  const handleSaveGrade = (gradeId: number) => {
+  const handleSaveGrade = (_gradeId: number) => {
     // Here you would update the grade in your database
     // For now, we'll just reset the editable state
     setEditableGradeId(null);

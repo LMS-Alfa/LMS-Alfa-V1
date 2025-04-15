@@ -1,5 +1,3 @@
-import { DefaultTheme } from 'styled-components';
-
 // Function to create a primary color palette based on a base color
 export const createColorPalette = (primaryColor: string = '#0ea5e9') => {
   // Convert hex to RGB
@@ -152,9 +150,8 @@ const defaultPrimaryPalette = {
 
 // Creates a theme with the specified primary color
 export const createTheme = (mode: 'light' | 'dark', primaryColor?: string) => {
-  // In a real implementation, we would generate a proper color palette based on primaryColor
-  // For now, we'll use the default palette
-  const primaryPalette = defaultPrimaryPalette;
+  // Generate palette based on provided color or use default
+  const primaryPalette = primaryColor ? createColorPalette(primaryColor) : defaultPrimaryPalette;
 
   const colors = {
     primary: primaryPalette,

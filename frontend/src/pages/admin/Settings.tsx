@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  FiSettings, FiSave, FiRefreshCw, FiMonitor, FiMoon, FiSun, 
+  FiSettings, FiSave, FiRefreshCw, FiMonitor, 
   FiBell, FiShield, FiGlobe, FiDatabase, FiUsers, FiMail, 
-  FiLock, FiUpload, FiDownload, FiAlertCircle, FiInfo,
-  FiSliders, FiToggleLeft, FiToggleRight, FiCheckCircle, FiXCircle
+  FiLock, 
+  FiSliders, FiToggleLeft, FiCheckCircle, FiXCircle
 } from 'react-icons/fi';
-import { DefaultTheme } from 'styled-components';
 import { useThemeContext } from '../../App';
 
 // Setting item type

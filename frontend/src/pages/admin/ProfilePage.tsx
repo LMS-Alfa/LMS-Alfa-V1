@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { FiUser, FiMail, FiLock, FiSave, FiX, FiInfo, FiAlertCircle } from 'react-icons/fi';
+import { FiUser,  FiLock, FiSave, FiX, FiInfo, } from 'react-icons/fi';
 import { useAuth } from '../../contexts/AuthContext';
 
 // Field validation interface
