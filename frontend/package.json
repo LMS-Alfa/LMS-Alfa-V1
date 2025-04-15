@@ -3,6 +3,7 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://github.com/LMS-Alfa/LMS-Alfa-V1",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -29,6 +30,7 @@
     "eslint": "^8.54.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.4",
+    "gh-pages": "^6.3.0",
     "typescript": "^5.2.2",
     "typescript-eslint": "^8.29.1",
     "vite": "^5.0.0"
