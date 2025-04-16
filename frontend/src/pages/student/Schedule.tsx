@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
-import { FiClock,  FiMapPin, FiUser, FiChevronLeft, FiChevronRight, FiSearch, FiBook, FiArrowRight } from 'react-icons/fi';
+import { FiClock,  FiMapPin, FiUser, FiChevronLeft, FiChevronRight, FiSearch, FiBook } from 'react-icons/fi';
 import Card from '../../components/common/Card';
 
 const Schedule: React.FC = () => {

@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import styled from 'styled-components';
-import { FiSearch, FiChevronDown, FiChevronUp, FiFilter, FiCalendar, FiClock, FiFileText, FiMapPin, FiAlertCircle, FiCheckCircle, FiClock as FiClockAlt } from 'react-icons/fi';
+import { FiSearch, FiChevronDown, FiChevronUp, FiFilter, FiCalendar, FiClock, FiFileText, FiMapPin, FiAlertCircle, FiCheckCircle, FiAward, FiBook } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 import { format, parseISO } from 'date-fns';
 
@@ -138,7 +138,13 @@ const Tests: React.FC = () => {
       })
       .sort((a, b) => {
         // Sort by date (most recent first for completed, earliest first for upcoming)
-        return new Date(a.date).getTime() - new Date(b.date).getTime();
+        if (a.status === 'upcoming' && b.status === 'upcoming') {
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
+        } else if (a.status === 'completed' && b.status === 'completed') {
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        } else {
+          return 0;
+        }
       });
   }, [tests, activeTab, searchTerm, subjectFilter]);
 
@@ -149,656 +155,805 @@ const Tests: React.FC = () => {
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'upcoming': return <FiClockAlt />;
+      case 'upcoming': return <FiClock />;
       case 'completed': return <FiCheckCircle />;
       case 'missed': return <FiAlertCircle />;
       default: return null;
     }
   };
 
+  const getTypeIcon = (type: string) => {
+    switch (type) {
+      case 'quiz': return <FiFileText />;
+      case 'exam': return <FiBook />;
+      case 'assignment': return <FiAward />;
+      default: return <FiFileText />;
+    }
+  };
+
+  const getSubjectColor = (subject: string): string => {
+    const subjectColors: {[key: string]: string} = {
+      'Mathematics': 'primary',
+      'Physics': 'warning',
+      'Computer Science': 'info',
+      'English': 'success',
+      'Chemistry': 'purple',
+      'History': 'danger'
+    };
+    
+    return subjectColors[subject] || 'primary';
+  };
+
   return (
-    <Container>
+    <PageContainer
+      as={motion.div}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
       <PageHeader>
         <HeaderContent>
-          <PageTitle>Tests & Assessments</PageTitle>
-          <PageDescription>View and prepare for your upcoming tests and assessments</PageDescription>
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            <PageTitle>Tests & Assessments</PageTitle>
+            <PageDescription>View and prepare for your upcoming tests and assessments</PageDescription>
+          </motion.div>
         </HeaderContent>
+
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
+        >
+          <FilterContainer>
+            <SearchContainer>
+              <SearchIcon>
+                <FiSearch />
+              </SearchIcon>
+              <SearchInput 
+                type="text" 
+                placeholder="Search tests..." 
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </SearchContainer>
+            
+            <FilterWrapper>
+              <FilterIcon>
+                <FiFilter />
+              </FilterIcon>
+              <Select 
+                value={subjectFilter} 
+                onChange={(e) => setSubjectFilter(e.target.value)}
+              >
+                {subjects.map(subject => (
+                  <option key={subject} value={subject}>
+                    {subject === 'all' ? 'All Subjects' : subject}
+                  </option>
+                ))}
+              </Select>
+            </FilterWrapper>
+          </FilterContainer>
+        </motion.div>
       </PageHeader>
 
-      <ContentWrapper>
-        <FilterContainer>
-          <SearchWrapper>
-            <FiSearch />
-            <SearchInput 
-              type="text" 
-              placeholder="Search tests by title or subject..." 
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </SearchWrapper>
-          
-          <FilterWrapper>
-            <FiFilter />
-            <Select 
-              value={subjectFilter} 
-              onChange={(e) => setSubjectFilter(e.target.value)}
+      <TabsContainer>
+        <TabButton 
+          $isActive={activeTab === 'all'} 
+          onClick={() => setActiveTab('all')}
+        >
+          All Tests
+          <TabCount>{tests.length}</TabCount>
+        </TabButton>
+        <TabButton 
+          $isActive={activeTab === 'upcoming'} 
+          onClick={() => setActiveTab('upcoming')}
+        >
+          Upcoming
+          <TabCount>{upcomingCount}</TabCount>
+        </TabButton>
+        <TabButton 
+          $isActive={activeTab === 'completed'} 
+          onClick={() => setActiveTab('completed')}
+        >
+          Completed
+          <TabCount>{completedCount}</TabCount>
+        </TabButton>
+        <TabButton 
+          $isActive={activeTab === 'missed'} 
+          onClick={() => setActiveTab('missed')}
+        >
+          Missed
+          <TabCount>{missedCount}</TabCount>
+        </TabButton>
+      </TabsContainer>
+
+      <ResultCount>
+        Showing {filteredTests.length} {filteredTests.length === 1 ? 'test' : 'tests'}
+      </ResultCount>
+
+      <TestsGrid>
+        <AnimatePresence>
+          {filteredTests.map((test, index) => (
+            <TestCard 
+              key={test.id}
+              as={motion.div}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+              layout
             >
-              {subjects.map(subject => (
-                <option key={subject} value={subject}>
-                  {subject === 'all' ? 'All Subjects' : subject}
-                </option>
-              ))}
-            </Select>
-          </FilterWrapper>
-        </FilterContainer>
-
-        <TabsContainer>
-          <Tab 
-            $isActive={activeTab === 'all'} 
-            onClick={() => setActiveTab('all')}
-          >
-            All Tests
-          </Tab>
-          <Tab 
-            $isActive={activeTab === 'upcoming'} 
-            onClick={() => setActiveTab('upcoming')}
-          >
-            Upcoming <TabCount>{upcomingCount}</TabCount>
-          </Tab>
-          <Tab 
-            $isActive={activeTab === 'completed'} 
-            onClick={() => setActiveTab('completed')}
-          >
-            Completed <TabCount>{completedCount}</TabCount>
-          </Tab>
-          <Tab 
-            $isActive={activeTab === 'missed'} 
-            onClick={() => setActiveTab('missed')}
-          >
-            Missed <TabCount>{missedCount}</TabCount>
-          </Tab>
-        </TabsContainer>
-
-        <TestsList>
-          <AnimatePresence>
-            {filteredTests.length === 0 ? (
-              <NoTests
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+              <TestHeader>
+                <TestType $type={test.type}>
+                  {test.type.charAt(0).toUpperCase() + test.type.slice(1)}
+                </TestType>
+                <StatusBadge status={test.status}>
+                  {getStatusIcon(test.status)}
+                  <span>
+                    {test.status === 'upcoming' ? 'Upcoming' : 
+                     test.status === 'completed' ? 'Completed' : 'Missed'}
+                  </span>
+                </StatusBadge>
+              </TestHeader>
+              
+              <TestTitle>{test.title}</TestTitle>
+              
+              <SubjectBadge $color={getSubjectColor(test.subject)}>
+                {getTypeIcon(test.type)}
+                <span>{test.subject}</span>
+              </SubjectBadge>
+              
+              <TestMetaInfo>
+                <MetaItem>
+                  <FiCalendar size={14} />
+                  <span>{format(parseISO(test.date), 'MMM d, yyyy • h:mm a')}</span>
+                </MetaItem>
+                {test.duration > 0 && (
+                  <MetaItem>
+                    <FiClock size={14} />
+                    <span>{test.duration} minutes</span>
+                  </MetaItem>
+                )}
+                {test.location && (
+                  <MetaItem>
+                    <FiMapPin size={14} />
+                    <span>{test.location}</span>
+                  </MetaItem>
+                )}
+              </TestMetaInfo>
+              
+              {test.status === 'completed' && test.score !== undefined && (
+                <ScoreSection>
+                  <ScoreLabel>Your Score</ScoreLabel>
+                  <ScoreDisplay $score={test.score / (test.maxScore || 1) * 100}>
+                    {test.score}/{test.maxScore}
+                  </ScoreDisplay>
+                  <ScoreBar>
+                    <ScoreFill $score={test.score / (test.maxScore || 1) * 100} />
+                  </ScoreBar>
+                </ScoreSection>
+              )}
+              
+              <ExpandButton
+                type="button"
+                onClick={() => toggleTestExpansion(test.id)}
+                $isExpanded={expandedTests.includes(test.id)}
               >
-                <NoTestsIcon><FiFileText size={48} /></NoTestsIcon>
-                <NoTestsTitle>No tests found</NoTestsTitle>
-                <NoTestsMessage>No tests matching your criteria were found. Try adjusting your filters.</NoTestsMessage>
-              </NoTests>
-            ) : (
-              filteredTests.map((test, index) => (
-                <TestCard 
-                  key={test.id} 
-                  status={test.status}
-                  as={motion.div}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  whileHover={{ y: -4 }}
-                >
-                  <TestHeader onClick={() => toggleTestExpansion(test.id)}>
-                    <TestMainInfo>
-                      <TestMetaInfo>
-                        <TestType type={test.type}>
-                          {test.type.charAt(0).toUpperCase() + test.type.slice(1)}
-                        </TestType>
-                        <StatusBadge status={test.status}>
-                          {getStatusIcon(test.status)}
-                          <span>{test.status.charAt(0).toUpperCase() + test.status.slice(1)}</span>
-                        </StatusBadge>
-                      </TestMetaInfo>
-                      <TestTitle>{test.title}</TestTitle>
-                      <TestSubject>{test.subject}</TestSubject>
-                    </TestMainInfo>
-                    <TestInfo>
-                      <TestDate>
-                        <FiCalendar />
-                        <span>{format(parseISO(test.date), 'MMM d, yyyy • h:mm a')}</span>
-                      </TestDate>
-                      {test.duration > 0 && (
-                        <TestDuration>
-                          <FiClock />
-                          <span>{test.duration} minutes</span>
-                        </TestDuration>
-                      )}
-                      {test.status === 'completed' && test.score !== undefined && (
-                        <TestScoreContainer>
-                          <ScoreLabel>Score:</ScoreLabel>
-                          <TestScore score={(test.score / test.maxScore!) * 100}>
-                            {test.score} / {test.maxScore}
-                          </TestScore>
-                        </TestScoreContainer>
-                      )}
-                    </TestInfo>
-                    <ExpandButtonWrapper>
-                      <ExpandButton>
-                        {expandedTests.includes(test.id) ? <FiChevronUp /> : <FiChevronDown />}
-                      </ExpandButton>
-                    </ExpandButtonWrapper>
-                  </TestHeader>
-                  
-                  <AnimatePresence>
-                    {expandedTests.includes(test.id) && (
-                      <TestDetails
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <DetailItems>
-                          {test.description && (
-                            <DetailItem>
-                              <DetailLabel><FiFileText /> Description</DetailLabel>
-                              <DetailText>{test.description}</DetailText>
-                            </DetailItem>
-                          )}
-                          
-                          {test.location && (
-                            <DetailItem>
-                              <DetailLabel><FiMapPin /> Location</DetailLabel>
-                              <DetailText>{test.location}</DetailText>
-                            </DetailItem>
-                          )}
-                          
-                          {test.instructions && (
-                            <DetailItem>
-                              <DetailLabel><FiAlertCircle /> Instructions</DetailLabel>
-                              <DetailText>{test.instructions}</DetailText>
-                            </DetailItem>
-                          )}
-                        </DetailItems>
-                        
-                        <ActionButtonContainer>
-                          {test.status === 'upcoming' && (
-                            <ActionButton as={motion.button} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                              Prepare for Test
-                            </ActionButton>
-                          )}
-                          
-                          {test.status === 'completed' && (
-                            <ActionButton as={motion.button} whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                              View Detailed Results
-                            </ActionButton>
-                          )}
-                        </ActionButtonContainer>
-                      </TestDetails>
+                {expandedTests.includes(test.id) ? 'Hide Details' : 'Show Details'}
+                {expandedTests.includes(test.id) ? <FiChevronUp /> : <FiChevronDown />}
+              </ExpandButton>
+              
+              <AnimatePresence>
+                {expandedTests.includes(test.id) && (
+                  <TestDetails
+                    as={motion.div}
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: 'auto' }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {test.description && (
+                      <DetailSection>
+                        <DetailTitle>Description</DetailTitle>
+                        <DetailContent>{test.description}</DetailContent>
+                      </DetailSection>
                     )}
-                  </AnimatePresence>
-                </TestCard>
-              ))
-            )}
-          </AnimatePresence>
-        </TestsList>
-      </ContentWrapper>
-    </Container>
+                    
+                    {test.instructions && (
+                      <DetailSection>
+                        <DetailTitle>Instructions</DetailTitle>
+                        <DetailContent>{test.instructions}</DetailContent>
+                      </DetailSection>
+                    )}
+                    
+                    {test.status === 'upcoming' && (
+                      <ActionButton
+                        as={motion.button}
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        {test.type === 'quiz' || test.type === 'exam' ? 'Prepare Now' : 'Submit Assignment'}
+                      </ActionButton>
+                    )}
+                  </TestDetails>
+                )}
+              </AnimatePresence>
+            </TestCard>
+          ))}
+        </AnimatePresence>
+      </TestsGrid>
+      
+      {filteredTests.length === 0 && (
+        <EmptyState>
+          <EmptyIcon>
+            <FiFileText size={48} />
+          </EmptyIcon>
+          <EmptyTitle>No tests found</EmptyTitle>
+          <EmptyDescription>
+            {searchTerm 
+              ? `No tests match your search "${searchTerm}"`
+              : `No ${activeTab !== 'all' ? activeTab : ''} tests available`
+            }
+          </EmptyDescription>
+        </EmptyState>
+      )}
+    </PageContainer>
   );
 };
 
-// Styled Components
-const Container = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
+interface TabButtonProps {
+  $isActive: boolean;
+}
+
+interface StatusBadgeProps {
+  status: string;
+}
+
+interface TestTypeProps {
+  $type: string;
+}
+
+interface ScoreProps {
+  $score: number;
+}
+
+interface SubjectProps {
+  $color: string;
+}
+
+interface ExpandButtonProps {
+  $isExpanded: boolean;
+}
+
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 `;
 
 const PageHeader = styled.div`
-  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
 `;
 
 const HeaderContent = styled.div`
-  padding: 16px 0;
+  display: flex;
+  flex-direction: column;
 `;
 
 const PageTitle = styled.h1`
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
-  margin: 0 0 8px 0;
-  color: ${({ theme }) => theme.colors.text.primary};
-`;
-
-const PageDescription = styled.p`
-  font-size: 16px;
-  color: ${({ theme }) => theme.colors.text.secondary};
+  color: ${props => props.theme.colors.text.primary};
   margin: 0;
 `;
 
-const ContentWrapper = styled.div`
-  background: ${({ theme }) => theme.colors.background.primary};
-  border-radius: 12px;
-  box-shadow: ${({ theme }) => theme.shadows.sm};
-  overflow: hidden;
-  border: 1px solid ${({ theme }) => theme.colors.border.light};
+const PageDescription = styled.p`
+  font-size: 14px;
+  color: ${props => props.theme.colors.text.secondary};
+  margin: 4px 0 0 0;
 `;
 
 const FilterContainer = styled.div`
   display: flex;
+  align-items: center;
   gap: 16px;
-  padding: 20px;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border.light};
-  background-color: ${({ theme }) => theme.colors.background.secondary};
-  flex-wrap: wrap;
+  
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
 `;
 
-const SearchWrapper = styled.div`
+const SearchContainer = styled.div`
   position: relative;
-  flex-grow: 1;
-  min-width: 250px;
+  width: 280px;
   
-  svg {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: ${({ theme }) => theme.colors.text.secondary};
-    font-size: 18px;
+  @media (max-width: ${props => props.theme.breakpoints.md}) {
+    width: 100%;
   }
+`;
+
+const SearchIcon = styled.div`
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: ${props => props.theme.colors.text.tertiary};
 `;
 
 const SearchInput = styled.input`
   width: 100%;
-  padding: 12px 12px 12px 40px;
+  padding: 10px 10px 10px 36px;
   border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.colors.border.light};
-  font-size: 14px;
-  background: ${({ theme }) => theme.colors.background.primary};
-  color: ${({ theme }) => theme.colors.text.primary};
+  border: 1px solid ${props => props.theme.colors.border.light};
+  background-color: ${props => props.theme.colors.background.primary};
+  color: ${props => props.theme.colors.text.primary};
   transition: all 0.2s ease;
+  
+  &::placeholder {
+    color: ${props => props.theme.colors.text.tertiary};
+  }
   
   &:focus {
     outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 3px ${({ theme }) => `${theme.colors.primary}30`};
+    border-color: ${props => props.theme.colors.primary[500]};
+    box-shadow: 0 0 0 2px ${props => props.theme.colors.primary[100]};
   }
 `;
 
 const FilterWrapper = styled.div`
   position: relative;
   
-  svg {
-    position: absolute;
-    left: 12px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: ${({ theme }) => theme.colors.text.secondary};
-    font-size: 18px;
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    width: 100%;
   }
 `;
 
+const FilterIcon = styled.div`
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: ${props => props.theme.colors.text.tertiary};
+  z-index: 1;
+  pointer-events: none;
+`;
+
 const Select = styled.select`
-  padding: 12px 12px 12px 40px;
-  border-radius: 8px;
-  border: 1px solid ${({ theme }) => theme.colors.border.light};
-  font-size: 14px;
-  background: ${({ theme }) => theme.colors.background.primary};
-  color: ${({ theme }) => theme.colors.text.primary};
-  min-width: 200px;
   appearance: none;
-  transition: all 0.2s ease;
+  width: 180px;
+  padding: 10px 10px 10px 36px;
+  border-radius: 8px;
+  border: 1px solid ${props => props.theme.colors.border.light};
+  background-color: ${props => props.theme.colors.background.primary};
+  color: ${props => props.theme.colors.text.primary};
   cursor: pointer;
+  transition: all 0.2s ease;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
   
   &:focus {
     outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
-    box-shadow: 0 0 0 3px ${({ theme }) => `${theme.colors.primary}30`};
+    border-color: ${props => props.theme.colors.primary[500]};
+    box-shadow: 0 0 0 2px ${props => props.theme.colors.primary[100]};
+  }
+  
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    width: 100%;
   }
 `;
 
 const TabsContainer = styled.div`
   display: flex;
-  padding: 0 20px;
-  margin-top: 12px;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border.light};
-  overflow-x: auto;
+  gap: 8px;
+  margin-bottom: 8px;
   
-  &::-webkit-scrollbar {
-    height: 0;
-    width: 0;
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    overflow-x: auto;
+    padding-bottom: 8px;
+    width: 100%;
+    
+    &::-webkit-scrollbar {
+      height: 3px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: ${props => props.theme.colors.background.light};
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: ${props => props.theme.colors.primary[200]};
+      border-radius: 4px;
+    }
   }
 `;
 
-const Tab = styled.button<{ $isActive: boolean }>`
-  padding: 16px 20px;
-  background: none;
-  border: none;
-  font-size: 15px;
-  font-weight: ${({ $isActive }) => $isActive ? '600' : '500'};
-  color: ${({ $isActive, theme }) => 
-    $isActive ? theme.colors.primary : theme.colors.text.secondary};
+const TabButton = styled.button<TabButtonProps>`
+  background-color: ${props => props.$isActive ? props.theme.colors.primary[500] : 'transparent'};
+  color: ${props => props.$isActive ? 'white' : props.theme.colors.text.secondary};
+  border: 1px solid ${props => props.$isActive ? props.theme.colors.primary[500] : props.theme.colors.border.light};
+  border-radius: 8px;
+  padding: 8px 16px;
   cursor: pointer;
-  border-bottom: 3px solid ${({ $isActive, theme }) => 
-    $isActive ? theme.colors.primary : 'transparent'};
+  font-size: 14px;
+  font-weight: 500;
   transition: all 0.2s ease;
   white-space: nowrap;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   
   &:hover {
-    color: ${({ theme }) => theme.colors.primary};
-    background-color: ${({ theme }) => `${theme.colors.primary}10`};
-  }
-  
-  &:focus {
-    outline: none;
+    background-color: ${props => {
+      if (props.$isActive) {
+        return props.theme.colors.primary[600];
+      }
+      return props.theme.colors.background.hover;
+    }};
   }
 `;
 
 const TabCount = styled.span`
-  background-color: ${({ theme }) => `${theme.colors.primary}20`};
-  color: ${({ theme }) => theme.colors.primary};
-  border-radius: 20px;
-  padding: 2px 8px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 1px 6px;
   font-size: 12px;
-  font-weight: 500;
+  min-width: 20px;
+  text-align: center;
 `;
 
-const TestsList = styled.div`
+const ResultCount = styled.div`
+  font-size: 14px;
+  color: ${props => props.theme.colors.text.secondary};
+  margin-bottom: -8px;
+`;
+
+const TestsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+  
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+const TestCard = styled.div`
+  background-color: ${props => props.theme.colors.background.primary};
+  border-radius: 12px;
+  border: 1px solid ${props => props.theme.colors.border.light};
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  padding: 20px;
-`;
-
-const TestCard = styled(motion.div)<{ status: string }>`
-  margin-bottom: 16px;
-  border-radius: 12px;
-  overflow: hidden;
-  background: white;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-  border: 1px solid ${({ theme }) => theme.colors.border.light};
-  border-left: 5px solid ${({ status, theme }) => {
-    switch (status) {
-      case 'upcoming': return theme.colors.primary;
-      case 'completed': return theme.colors.success;
-      case 'missed': return theme.colors.danger[500];
-      default: return theme.colors.border.light;
-    }
-  }};
+  gap: 16px;
   transition: all 0.2s ease;
   
   &:hover {
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   }
 `;
 
 const TestHeader = styled.div`
-  padding: 20px;
-  cursor: pointer;
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  align-items: flex-start;
-  position: relative;
+  justify-content: space-between;
+  align-items: center;
 `;
 
-const TestMainInfo = styled.div`
-  flex: 2;
-  min-width: 250px;
+const TestType = styled.div<TestTypeProps>`
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+  
+  ${props => {
+    switch(props.$type) {
+      case 'quiz':
+        return `
+          background-color: ${props.theme.colors.primary[50]};
+          color: ${props.theme.colors.primary[500]};
+        `;
+      case 'exam':
+        return `
+          background-color: ${props.theme.colors.warning[50]};
+          color: ${props.theme.colors.warning[500]};
+        `;
+      case 'assignment':
+        return `
+          background-color: ${props.theme.colors.success[50]};
+          color: ${props.theme.colors.success[500]};
+        `;
+      default:
+        return `
+          background-color: ${props.theme.colors.primary[50]};
+          color: ${props.theme.colors.primary[500]};
+        `;
+    }
+  }}
+`;
+
+const StatusBadge = styled.div<StatusBadgeProps>`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 4px 8px;
+  border-radius: 4px;
+  
+  ${props => {
+    switch(props.status) {
+      case 'upcoming':
+        return `
+          background-color: ${props.theme.colors.primary[50]};
+          color: ${props.theme.colors.primary[500]};
+        `;
+      case 'completed':
+        return `
+          background-color: ${props.theme.colors.success[50]};
+          color: ${props.theme.colors.success[500]};
+        `;
+      case 'missed':
+        return `
+          background-color: ${props.theme.colors.danger[50]};
+          color: ${props.theme.colors.danger[500]};
+        `;
+      default:
+        return `
+          background-color: ${props.theme.colors.primary[50]};
+          color: ${props.theme.colors.primary[500]};
+        `;
+    }
+  }}
+`;
+
+const TestTitle = styled.h3`
+  font-size: 16px;
+  font-weight: 600;
+  color: ${props => props.theme.colors.text.primary};
+  margin: 0;
+`;
+
+const SubjectBadge = styled.div<SubjectProps>`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 4px;
+  margin-top: -8px;
+  
+  ${props => {
+    switch(props.$color) {
+      case 'primary':
+        return `
+          background-color: ${props.theme.colors.primary[50]};
+          color: ${props.theme.colors.primary[500]};
+        `;
+      case 'warning':
+        return `
+          background-color: ${props.theme.colors.warning[50]};
+          color: ${props.theme.colors.warning[500]};
+        `;
+      case 'success':
+        return `
+          background-color: ${props.theme.colors.success[50]};
+          color: ${props.theme.colors.success[500]};
+        `;
+      case 'danger':
+        return `
+          background-color: ${props.theme.colors.danger[50]};
+          color: ${props.theme.colors.danger[500]};
+        `;
+      case 'purple':
+        return `
+          background-color: #f3e8ff;
+          color: #7c3aed;
+        `;
+      case 'info':
+        return `
+          background-color: #e0f7ff;
+          color: #0ea5e9;
+        `;
+      default:
+        return `
+          background-color: ${props.theme.colors.primary[50]};
+          color: ${props.theme.colors.primary[500]};
+        `;
+    }
+  }}
 `;
 
 const TestMetaInfo = styled.div`
   display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-`;
-
-interface StatusBadgeProps {
-  status: string;
-}
-
-const StatusBadge = styled.span<StatusBadgeProps>`
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-  background: ${({ status, theme }) => {
-    switch (status) {
-      case 'upcoming': return `${theme.colors.primary}20`;
-      case 'completed': return `${theme.colors.success}20`;
-      case 'missed': return `${theme.colors.danger[500]}20`;
-      default: return theme.colors.border.light;
-    }
-  }};
-  color: ${({ status, theme }) => {
-    switch (status) {
-      case 'upcoming': return theme.colors.primary;
-      case 'completed': return theme.colors.success;
-      case 'missed': return theme.colors.danger[500];
-      default: return theme.colors.text.primary;
-    }
-  }};
-  
-  svg {
-    font-size: 14px;
-  }
-`;
-
-const TestType = styled.span<{ type: string }>`
-  display: inline-flex;
-  align-items: center;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 12px;
-  font-weight: 500;
-  background: ${({ type, theme }) => {
-    switch (type) {
-      case 'quiz': return `${theme.colors.warning}20`;
-      case 'exam': return `${theme.colors.primary}20`;
-      case 'assignment': return `${theme.colors.primary}10`;
-      default: return theme.colors.border.light;
-    }
-  }};
-  color: ${({ type, theme }) => {
-    switch (type) {
-      case 'quiz': return theme.colors.warning;
-      case 'exam': return theme.colors.primary;
-      case 'assignment': return theme.colors.primary;
-      default: return theme.colors.text.primary;
-    }
-  }};
-`;
-
-const TestTitle = styled.h3`
-  margin: 0 0 4px 0;
-  font-size: 18px;
-  font-weight: 600;
-  color: ${({ theme }) => theme.colors.text.primary};
-`;
-
-const TestSubject = styled.p`
-  margin: 0;
-  font-size: 14px;
-  color: ${({ theme }) => theme.colors.text.secondary};
-`;
-
-const TestInfo = styled.div`
-  flex: 1;
-  min-width: 250px;
-  display: flex;
   flex-direction: column;
-  gap: 10px;
-`;
-
-const TestDate = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: ${({ theme }) => theme.colors.text.secondary};
-  
-  svg {
-    color: ${({ theme }) => theme.colors.text.tertiary};
-  }
-`;
-
-const TestDuration = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  color: ${({ theme }) => theme.colors.text.secondary};
-  
-  svg {
-    color: ${({ theme }) => theme.colors.text.tertiary};
-  }
-`;
-
-const TestScoreContainer = styled.div`
-  display: flex;
-  align-items: center;
   gap: 8px;
 `;
 
-const ScoreLabel = styled.span`
-  font-size: 14px;
-  font-weight: 500;
-  color: ${({ theme }) => theme.colors.text.secondary};
+const MetaItem = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: ${props => props.theme.colors.text.secondary};
 `;
 
-const TestScore = styled.div<{ score: number }>`
-  padding: 4px 10px;
-  border-radius: 20px;
+const ScoreSection = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+`;
+
+const ScoreLabel = styled.div`
+  font-size: 13px;
+  color: ${props => props.theme.colors.text.secondary};
+  width: 80px;
+`;
+
+const ScoreDisplay = styled.div<ScoreProps>`
   font-size: 14px;
   font-weight: 600;
-  background: ${({ score, theme }) => {
-    if (score >= 80) return `${theme.colors.success}20`;
-    if (score >= 60) return `${theme.colors.warning}20`;
-    return `${theme.colors.danger[500]}20`;
-  }};
-  color: ${({ score, theme }) => {
-    if (score >= 80) return theme.colors.success;
-    if (score >= 60) return theme.colors.warning;
-    return theme.colors.danger[500];
-  }};
+  min-width: 60px;
+  
+  ${props => {
+    if (props.$score >= 90) {
+      return `color: ${props.theme.colors.success[500]};`;
+    } else if (props.$score >= 75) {
+      return `color: ${props.theme.colors.primary[500]};`;
+    } else if (props.$score >= 60) {
+      return `color: ${props.theme.colors.warning[500]};`;
+    } else {
+      return `color: ${props.theme.colors.danger[500]};`;
+    }
+  }}
 `;
 
-const ExpandButtonWrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
+const ScoreBar = styled.div`
+  flex: 1;
+  height: 6px;
+  background-color: ${props => props.theme.colors.background.light};
+  border-radius: 3px;
+  overflow: hidden;
 `;
 
-const ExpandButton = styled.button`
-  background: none;
+const ScoreFill = styled.div<ScoreProps>`
+  height: 100%;
+  width: ${props => props.$score}%;
+  
+  ${props => {
+    if (props.$score >= 90) {
+      return `background-color: ${props.theme.colors.success[500]};`;
+    } else if (props.$score >= 75) {
+      return `background-color: ${props.theme.colors.primary[500]};`;
+    } else if (props.$score >= 60) {
+      return `background-color: ${props.theme.colors.warning[500]};`;
+    } else {
+      return `background-color: ${props.theme.colors.danger[500]};`;
+    }
+  }}
+  
+  border-radius: 3px;
+  transition: width 1s ease-in-out;
+`;
+
+const ExpandButton = styled.button<ExpandButtonProps>`
+  background-color: transparent;
+  color: ${props => props.theme.colors.primary[500]};
   border: none;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 500;
   cursor: pointer;
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: ${({ theme }) => theme.colors.text.secondary};
-  font-size: 20px;
-  padding: 4px;
-  width: 32px;
-  height: 32px;
-  border-radius: 16px;
+  gap: 4px;
+  align-self: flex-start;
   transition: all 0.2s ease;
+  margin-top: -8px;
   
   &:hover {
-    color: ${({ theme }) => theme.colors.primary};
-    background-color: ${({ theme }) => `${theme.colors.primary}10`};
+    color: ${props => props.theme.colors.primary[600]};
+    text-decoration: underline;
+  }
+  
+  svg {
+    transition: transform 0.2s ease;
+    transform: ${props => props.$isExpanded ? 'rotate(180deg)' : 'rotate(0deg)'};
   }
 `;
 
-const TestDetails = styled(motion.div)`
-  padding: 0 20px 20px;
-  border-top: 1px solid ${({ theme }) => theme.colors.border.light};
-`;
-
-const DetailItems = styled.div`
+const TestDetails = styled.div`
   display: flex;
   flex-direction: column;
   gap: 16px;
-  margin-top: 16px;
+  overflow: hidden;
+  border-top: 1px solid ${props => props.theme.colors.border.light};
+  padding-top: 16px;
+  margin-top: 8px;
 `;
 
-const DetailItem = styled.div`
+const DetailSection = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4px;
 `;
 
-const DetailLabel = styled.div`
+const DetailTitle = styled.h4`
+  font-size: 14px;
   font-weight: 600;
-  font-size: 14px;
-  color: ${({ theme }) => theme.colors.text.primary};
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  
-  svg {
-    color: ${({ theme }) => theme.colors.text.tertiary};
-    font-size: 16px;
-  }
+  color: ${props => props.theme.colors.text.primary};
+  margin: 0;
 `;
 
-const DetailText = styled.div`
-  font-size: 14px;
-  color: ${({ theme }) => theme.colors.text.secondary};
-  line-height: 1.6;
-  padding-left: 24px;
-`;
-
-const ActionButtonContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 20px;
+const DetailContent = styled.p`
+  font-size: 13px;
+  color: ${props => props.theme.colors.text.secondary};
+  margin: 0;
+  line-height: 1.5;
 `;
 
 const ActionButton = styled.button`
-  background: ${({ theme }) => theme.colors.primary};
+  background-color: ${props => props.theme.colors.primary[500]};
   color: white;
   border: none;
   border-radius: 8px;
-  padding: 10px 20px;
+  padding: 10px 16px;
   font-size: 14px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
   
   &:hover {
-    background: ${({ theme }) => theme.colors.primary}e0;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px ${({ theme }) => `${theme.colors.primary}40`};
-  }
-  
-  &:focus {
-    outline: none;
+    background-color: ${props => props.theme.colors.primary[600]};
   }
 `;
 
-const NoTests = styled(motion.div)`
-  text-align: center;
-  padding: 60px 0;
+const EmptyState = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  padding: 64px 16px;
+  text-align: center;
 `;
 
-const NoTestsIcon = styled.div`
-  color: ${({ theme }) => theme.colors.text.tertiary};
-  margin-bottom: 8px;
+const EmptyIcon = styled.div`
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: ${props => props.theme.colors.background.light};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${props => props.theme.colors.text.secondary};
+  margin-bottom: 16px;
 `;
 
-const NoTestsTitle = styled.h3`
+const EmptyTitle = styled.h3`
   font-size: 18px;
   font-weight: 600;
-  color: ${({ theme }) => theme.colors.text.primary};
-  margin: 0;
+  color: ${props => props.theme.colors.text.primary};
+  margin: 0 0 8px;
 `;
 
-const NoTestsMessage = styled.p`
+const EmptyDescription = styled.p`
   font-size: 14px;
-  color: ${({ theme }) => theme.colors.text.secondary};
+  color: ${props => props.theme.colors.text.secondary};
   margin: 0;
   max-width: 400px;
 `;

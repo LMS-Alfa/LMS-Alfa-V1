@@ -14,16 +14,30 @@ We are making significant progress on the Admin Panel UI components and have beg
    - ✅ Completed the TeacherAssignments page with complete assignment creation and management functionality
 7. Implementing calendar-based scheduling for the Teacher Panel
 8. Continuing development of the Student Panel
-   - ✅ Created the Student Layout with responsive design and sidebar navigation
+   - ✅ Created the Student Layout with responsive sidebar and navigation
    - ✅ Implemented a comprehensive Student Dashboard with welcome section, statistics, assignments, grades, and courses
    - ✅ Completed the MyCourses page with filtering tabs, search functionality, and comprehensive course information
    - ✅ Implemented the Schedule page with day/week view, date picker, and class details
    - ✅ Created the Tests page with test listings, scores, and test completion interface
    - ✅ Developed the Assignments page with assignment listings and submission status
    - ✅ Implemented the Messages page for student communication
+   - ✅ Added an Announcements page with filtering, search, and detailed announcement viewing
 
 ## Recent Changes
 
+- Enhanced the Student Panel with a new Announcements feature:
+  - Implemented a comprehensive Announcements page with list/detail interface
+  - Added filtering by category (general, course, event, administrative)
+  - Added filtering by priority (normal, important, urgent)
+  - Added filtering by read status (read, unread)
+  - Implemented search functionality for finding specific announcements
+  - Created visual indicators for announcement priorities and categories
+  - Implemented responsive design for mobile and desktop views
+  - Added detailed announcement view with formatted content
+  - Created visual badges for different announcement categories and priorities
+  - Added support for action links within announcements
+  - Updated the Student Sidebar to include the Announcements navigation item
+  - Added proper routing configuration in App.tsx
 - Fixed various TypeScript and linter errors across the codebase:
   - Resolved TypeScript property issues with theme colors (replaced `theme.colors.error` with `theme.colors.danger[500]`)
   - Fixed unused variable warnings by either removing them or prefixing with underscores

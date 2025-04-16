@@ -1,4 +1,5 @@
 {
+  "homepage": "https://seanutk.github.io/lms_alfa_v1",
   "name": "frontend",
   "private": true,
   "version": "0.0.0",
@@ -8,6 +9,7 @@
     "build": "tsc && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {

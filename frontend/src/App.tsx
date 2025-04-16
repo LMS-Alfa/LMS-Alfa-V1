@@ -1,5 +1,5 @@
 import { useState, createContext, useContext } from 'react'
-import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { ThemeProvider, DefaultTheme } from 'styled-components'
 import { createTheme } from './styles/theme'
 import GlobalStyle from './styles/globalStyles'
@@ -31,6 +31,7 @@ import Schedule from './pages/student/Schedule'
 import Messages from './pages/student/Messages'
 import Tests from './pages/student/Tests'
 import Flashcards from './pages/student/Flashcards'
+import Announcements from './pages/student/Announcements'
 
 // Create a context for theme settings
 export interface ThemeContextType {
@@ -147,6 +148,7 @@ function AppContent() {
           }>
             <Route index element={<Navigate to="/student/dashboard" replace />} />
             <Route path="dashboard" element={<StudentDashboard />} />
+            <Route path="announcements" element={<Announcements />} />
             <Route path="courses" element={<MyCourses />} />
             <Route path="lessons" element={<Lessons />} />
             <Route path="assignments" element={<Assignments />} />

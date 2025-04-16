@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import styled, { css } from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiBook, FiSettings, FiHome, FiChevronLeft, FiChevronRight,   FiCalendar, FiMenu, FiX,  FiLayers,  FiUser, FiFileText, FiVideo,  FiMessageSquare, FiClipboard } from 'react-icons/fi';
+import { FiBook, FiSettings, FiHome, FiChevronLeft, FiChevronRight,   FiCalendar, FiMenu, FiX,  FiLayers,  FiUser, FiFileText, FiVideo,  FiMessageSquare, FiClipboard, FiBell } from 'react-icons/fi';
 import LogoutButton from '../common/LogoutButton';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -107,6 +107,7 @@ const StudentSidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, on
   // Student menu items
   const studentMenu = [
     { path: '/student/dashboard', icon: <FiHome />, label: 'Dashboard' },
+    { path: '/student/announcements', icon: <FiBell />, label: 'Announcements' },
     { path: '/student/courses', icon: <FiBook />, label: 'My Courses' },
     { path: '/student/lessons', icon: <FiVideo />, label: 'Lessons' },
     { path: '/student/assignments', icon: <FiFileText />, label: 'Assignments' },
