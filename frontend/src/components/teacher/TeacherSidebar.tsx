@@ -213,22 +213,22 @@ const TeacherSidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, on
                     exit={{ opacity: 0 }}
                     transition={{ delay: 0.2 }}
                   >
-                    Account
+                    System
                   </SectionLabel>
                 )}
               </AnimatePresence>
 
               <MenuSection>
                 <MenuItem 
-                  icon={<FiSettings />} 
-                  label="Settings" 
-                  to="/teacher/settings" 
-                  isCollapsed={isMobile ? false : isCollapsed} 
-                />
-                <MenuItem 
                   icon={<FiUsers />} 
                   label="Profile" 
                   to="/teacher/profile" 
+                  isCollapsed={isMobile ? false : isCollapsed} 
+                />
+                <MenuItem 
+                  icon={<FiSettings />} 
+                  label="Settings" 
+                  to="/teacher/settings" 
                   isCollapsed={isMobile ? false : isCollapsed} 
                 />
               </MenuSection>

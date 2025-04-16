@@ -461,7 +461,7 @@ const SearchIcon = styled.div`
 const SearchInput = styled.input`
   width: 100%;
   padding: ${props => `${props.theme.spacing[2]} ${props.theme.spacing[2]} ${props.theme.spacing[2]} ${props.theme.spacing[8]}`};
-  border: 1px solid ${props => props.theme.colors.border};
+  border: 1px solid ${props => props.theme.colors.neutral[300]};
   border-radius: ${props => props.theme.borderRadius.md};
   font-size: 0.9rem;
   
@@ -497,11 +497,11 @@ const FilterLabel = styled.div`
 
 const FilterSelect = styled.select`
   padding: ${props => `${props.theme.spacing[2]} ${props.theme.spacing[3]}`};
-  border: 1px solid ${props => props.theme.colors.border};
+  border: 1px solid ${props => props.theme.colors.neutral[300]};
   border-radius: ${props => props.theme.borderRadius.md};
-  background-color: ${props => props.theme.colors.background.primary};
-  color: ${props => props.theme.colors.text.primary};
   font-size: 0.9rem;
+  color: ${props => props.theme.colors.text.primary};
+  background-color: ${props => props.theme.colors.background.primary};
   
   &:focus {
     outline: none;
@@ -509,8 +509,8 @@ const FilterSelect = styled.select`
     box-shadow: 0 0 0 2px ${props => props.theme.colors.primary[100]};
   }
   
-  @media (max-width: ${props => props.theme.breakpoints.md}) {
-    flex-grow: 1;
+  @media (max-width: ${props => props.theme.breakpoints.sm}) {
+    width: 100%;
   }
 `;
 
@@ -534,7 +534,7 @@ const ActionButton = styled.button`
   height: 36px;
   background-color: ${props => props.theme.colors.background.secondary};
   color: ${props => props.theme.colors.text.secondary};
-  border: 1px solid ${props => props.theme.colors.border};
+  border: 1px solid ${props => props.theme.colors.neutral[300]};
   border-radius: ${props => props.theme.borderRadius.md};
   cursor: pointer;
   transition: all ${props => props.theme.transition.fast};
@@ -551,7 +551,7 @@ const ActionsMenu = styled.div`
   right: 0;
   margin-top: ${props => props.theme.spacing[1]};
   background-color: ${props => props.theme.colors.background.primary};
-  border: 1px solid ${props => props.theme.colors.border};
+  border: 1px solid ${props => props.theme.colors.neutral[300]};
   border-radius: ${props => props.theme.borderRadius.md};
   box-shadow: ${props => props.theme.shadows.md};
   z-index: 10;
@@ -749,19 +749,26 @@ const PageButton = styled.button<PageButtonProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 32px;
-  height: 32px;
+  min-width: 36px;
+  height: 36px;
   padding: 0 ${props => props.theme.spacing[2]};
-  background-color: ${props => props.$isActive ? props.theme.colors.primary[600] : props.theme.colors.background.secondary};
+  background-color: ${props => props.$isActive ? props.theme.colors.primary[500] : 'transparent'};
   color: ${props => props.$isActive ? 'white' : props.theme.colors.text.primary};
-  border: 1px solid ${props => props.$isActive ? props.theme.colors.primary[600] : props.theme.colors.border};
-  border-radius: ${props => props.theme.borderRadius.md};
-  font-size: 0.9rem;
+  border: 1px solid ${props => props.$isActive ? 'transparent' : props.theme.colors.neutral[300]};
+  border-radius: 4px;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: all ${props => props.theme.transition.fast};
+  transition: all 0.2s ease;
   
   &:hover {
-    background-color: ${props => props.$isActive ? props.theme.colors.primary[700] : props.theme.colors.background.tertiary};
+    background-color: ${props => props.$isActive 
+      ? props.theme.colors.primary[600] 
+      : props.theme.colors.background.hover};
+    border-color: ${props => props.$isActive ? 'transparent' : props.theme.colors.neutral[300]};
+  }
+
+  &:focus {
+    outline: none;
   }
 `;
 

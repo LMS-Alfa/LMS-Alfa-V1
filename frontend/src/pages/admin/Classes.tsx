@@ -506,10 +506,11 @@ const SearchInput = styled.input`
   width: 100%;
   padding: 12px 16px 12px 44px;
   border-radius: 8px;
-  border: 1px solid ${props => props.theme.colors.border};
+  border: 1px solid ${props => props.theme.colors.neutral[300]};
   background-color: ${props => props.theme.colors.background.primary};
   font-size: 15px;
   color: ${props => props.theme.colors.text.primary};
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   
   &:focus {
     outline: none;
@@ -534,11 +535,13 @@ const FiltersWrapper = styled.div`
 const SelectFilter = styled.select`
   padding: 12px 16px;
   border-radius: 8px;
-  border: 1px solid ${props => props.theme.colors.border};
+  border: 1px solid ${props => props.theme.colors.neutral[300]};
   background-color: ${props => props.theme.colors.background.primary};
   font-size: 15px;
   color: ${props => props.theme.colors.text.primary};
   min-width: 150px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  appearance: auto;
   
   &:focus {
     outline: none;
@@ -569,7 +572,7 @@ const ViewButton = styled.button<ViewButtonProps>`
   border-radius: 8px;
   border: 1px solid ${props => props.$isActive 
     ? props.theme.colors.primary[500] 
-    : props.theme.colors.border};
+    : props.theme.colors.neutral[300]};
   background-color: ${props => props.$isActive 
     ? props.theme.colors.primary[50] 
     : props.theme.colors.background.primary};

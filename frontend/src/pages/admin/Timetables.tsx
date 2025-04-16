@@ -427,7 +427,7 @@ const WeekNavigationButton = styled.button`
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1px solid ${props => props.theme.colors.border};
+  border: 1px solid ${props => props.theme.colors.neutral[300]};
   background-color: ${props => props.theme.colors.background.primary};
   color: ${props => props.theme.colors.text.primary};
   cursor: pointer;
@@ -481,7 +481,7 @@ const SearchInput = styled.input`
   width: 100%;
   padding: 10px 10px 10px 36px;
   border-radius: 8px;
-  border: 1px solid ${props => props.theme.colors.border};
+  border: 1px solid ${props => props.theme.colors.neutral[300]};
   font-size: 14px;
   
   &:focus {
@@ -494,7 +494,7 @@ const SearchInput = styled.input`
 const FilterSelect = styled.select`
   padding: 10px 12px;
   border-radius: 8px;
-  border: 1px solid ${props => props.theme.colors.border};
+  border: 1px solid ${props => props.theme.colors.neutral[300]};
   font-size: 14px;
   min-width: 150px;
   

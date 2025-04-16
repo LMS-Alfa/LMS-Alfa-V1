@@ -8,6 +8,7 @@ import {
   FiSliders, FiToggleLeft, FiCheckCircle, FiXCircle
 } from 'react-icons/fi';
 import { useThemeContext } from '../../App';
+import { useAuth } from '../../contexts/AuthContext';
 
 // Setting item type
 type SettingType = 'toggle' | 'select' | 'input' | 'slider' | 'color' | 'button';
@@ -28,6 +29,8 @@ interface SettingItem {
 const Settings: React.FC = () => {
   // Get theme context
   const { isDarkMode, toggleTheme, primaryColor, setPrimaryColor } = useThemeContext();
+  // Get auth context to check user role
+  const { user } = useAuth();
   
   // State for active category
   const [activeCategory, setActiveCategory] = useState<string>('general');
@@ -53,15 +56,7 @@ const Settings: React.FC = () => {
       category: 'general',
       icon: <FiMail />
     },
-    {
-      id: 'userRegistration',
-      label: 'Allow User Registration',
-      description: 'Enable self-registration for new users',
-      type: 'toggle',
-      value: true,
-      category: 'general',
-      icon: <FiUsers />
-    },
+    // "Allow User Registration" toggle has been removed
     
     // Appearance Settings
     {
@@ -283,8 +278,22 @@ const Settings: React.FC = () => {
     }, 1500);
   };
   
-  // Get filtered settings by category
-  const filteredSettings = settings.filter(setting => setting.category === activeCategory);
+  // Get filtered settings by category and role
+  const filteredSettings = settings.filter(setting => {
+    // Only show security and system settings to admin users
+    if ((setting.category === 'security' || setting.category === 'system') && user?.role !== 'admin') {
+      return false;
+    }
+    return setting.category === activeCategory;
+  });
+
+  // Get visible categories based on user role
+  const visibleCategories = categories.filter(category => {
+    if ((category.id === 'security' || category.id === 'system') && user?.role !== 'admin') {
+      return false;
+    }
+    return true;
+  });
   
   return (
     <SettingsContainer>
@@ -346,7 +355,7 @@ const Settings: React.FC = () => {
       
       <SettingsLayout>
         <CategorySidebar>
-          {categories.map(category => (
+          {visibleCategories.map(category => (
             <CategoryButton
               key={category.id}
               $isActive={activeCategory === category.id}
@@ -403,11 +412,20 @@ const Settings: React.FC = () => {
                       )}
                       
                       {setting.type === 'input' && (
-                        <InputControl
-                          type="text"
-                          value={setting.value}
-                          onChange={(e) => handleInputChange(setting.id, e.target.value)}
-                        />
+                        <div style={{ width: '100%' }}>
+                          <InputControl
+                            type="text"
+                            value={setting.value}
+                            onChange={(e) => handleInputChange(setting.id, e.target.value)}
+                            readOnly={setting.id === 'siteName' && user?.role !== 'admin'}
+                          />
+                          {setting.id === 'siteName' && user?.role !== 'admin' && (
+                            <AdminOnlyNote>
+                              <FiLock size={12} />
+                              This setting can only be changed by administrators
+                            </AdminOnlyNote>
+                          )}
+                        </div>
                       )}
                       
                       {setting.type === 'select' && (
@@ -721,17 +739,24 @@ const ToggleSlider = styled.div<ToggleProps>`
 
 const InputControl = styled.input`
   width: 100%;
-  padding: ${props => `${props.theme.spacing[2]} ${props.theme.spacing[3]}`};
-  font-size: 0.95rem;
-  border: 1px solid ${props => props.theme.colors.border.light};
-  border-radius: ${props => props.theme.borderRadius.md};
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid ${props => props.theme.colors.neutral[300]};
+  font-size: 14px;
   color: ${props => props.theme.colors.text.primary};
-  background-color: ${props => props.theme.colors.background.secondary};
+  background-color: ${props => props.theme.colors.background.primary};
+  transition: all 0.2s ease;
   
   &:focus {
     outline: none;
-    border-color: ${props => props.theme.colors.primary[400]};
+    border-color: ${props => props.theme.colors.primary[600]};
     box-shadow: 0 0 0 2px ${props => props.theme.colors.primary[100]};
+  }
+  
+  &:read-only {
+    background-color: ${props => props.theme.colors.background.tertiary};
+    cursor: not-allowed;
+    opacity: 0.8;
   }
 `;
 
@@ -786,6 +811,20 @@ const ActionButton = styled.button`
   
   &:hover {
     background-color: ${props => props.theme.colors.primary[700]};
+  }
+`;
+
+const AdminOnlyNote = styled.div`
+  font-size: 12px;
+  color: ${props => props.theme.colors.text.tertiary};
+  margin-top: 4px;
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  
+  svg {
+    font-size: 14px;
   }
 `;
 

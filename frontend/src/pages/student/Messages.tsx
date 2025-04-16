@@ -829,7 +829,8 @@ const MessageContent = styled.div<MessageProps>`
   border-radius: 16px;
   border-bottom-right-radius: ${props => props.$isMine ? '4px' : '16px'};
   border-bottom-left-radius: ${props => props.$isMine ? '16px' : '4px'};
-  color: ${props => props.$isMine ? 'white' : props.theme.colors.text.primary};
+  color: ${props => props.$isMine ? '#000' : props.theme.colors.text.primary};
+  font-weight: ${props => props.$isMine ? '500' : '400'};
   background-color: ${props => props.$isMine 
     ? props.theme.colors.primary 
     : props.theme.colors.background.secondary
@@ -887,7 +888,7 @@ const MessageInput = styled.input`
   padding: 0 16px;
   background-color: ${props => props.theme.colors.background.secondary};
   font-size: 14px;
-  color: ${props => props.theme.colors.text.primary};
+  color: #000000;
   outline: none;
   
   &::placeholder {

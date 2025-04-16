@@ -114,8 +114,6 @@ const StudentSidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, on
     { path: '/student/messages', icon: <FiMessageSquare />, label: 'Messages' },
     { path: '/student/tests', icon: <FiClipboard />, label: 'Tests' },
     { path: '/student/flashcards', icon: <FiLayers />, label: 'Flashcards' },
-    { path: '/student/profile', icon: <FiUser />, label: 'Profile' },
-    { path: '/student/settings', icon: <FiSettings />, label: 'Settings' },
   ];
 
   return (
@@ -175,6 +173,34 @@ const StudentSidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, on
                     isCollapsed={isMobile ? false : isCollapsed}
                   />
                 ))}
+              </MenuSection>
+
+              <MenuSection>
+                <AnimatePresence>
+                  {(!isCollapsed || isMobile) && (
+                    <SectionLabel
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      System
+                    </SectionLabel>
+                  )}
+                </AnimatePresence>
+
+                <MenuItem 
+                  icon={<FiUser />} 
+                  label="Profile" 
+                  to="/student/profile"
+                  isCollapsed={isMobile ? false : isCollapsed} 
+                />
+                <MenuItem 
+                  icon={<FiSettings />} 
+                  label="Settings" 
+                  to="/student/settings"
+                  isCollapsed={isMobile ? false : isCollapsed} 
+                />
               </MenuSection>
             </MenuContainer>
 
@@ -499,6 +525,15 @@ const SidebarLogoutButton = styled(LogoutButton)`
       color: ${props => props.theme.colors.danger};
     }
   }
+`;
+
+const SectionLabel = styled(motion.div)`
+  font-size: ${props => props.theme.spacing[3]};
+  font-weight: 600;
+  color: ${props => props.theme.colors.text.tertiary};
+  padding: 0 ${props => props.theme.spacing[4]};
+  margin-top: ${props => props.theme.spacing[4]};
+  margin-bottom: ${props => props.theme.spacing[2]};
 `;
 
 export default StudentSidebar; 

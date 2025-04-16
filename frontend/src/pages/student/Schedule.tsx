@@ -453,9 +453,7 @@ const Schedule: React.FC = () => {
           
           <Card>
             <UpcomingClasses>
-              <SectionHeader>
-                <SectionTitle>Upcoming Classes</SectionTitle>
-              </SectionHeader>
+              <SectionTitle>Upcoming Classes</SectionTitle>
               
               <UpcomingClassesList>
                 {upcomingClasses.map(cls => (
@@ -466,15 +464,17 @@ const Schedule: React.FC = () => {
                         <FiBook size={14} />
                         <span>{cls.courseName}</span>
                       </UpcomingClassName>
-                      <UpcomingClassDetails>
+                      <UpcomingClassTime>
                         <FiClock size={12} />
                         <span>{formatTime(cls.startTime)} - {formatTime(cls.endTime)}</span>
+                      </UpcomingClassTime>
+                      <UpcomingClassLocation>
                         <FiMapPin size={12} />
                         <span>{cls.location}</span>
-                      </UpcomingClassDetails>
+                      </UpcomingClassLocation>
                     </UpcomingClassContent>
                     <NextIcon>
-                      <FiArrowRight size={16} />
+                      <FiChevronRight size={18} />
                     </NextIcon>
                   </UpcomingClassItem>
                 ))}
@@ -754,7 +754,8 @@ const SectionTitle = styled.h2`
   font-size: 18px;
   font-weight: 600;
   color: ${props => props.theme.colors.text.primary};
-  margin: 0;
+  margin: 0 0 12px 0;
+  padding: 0 20px;
 `;
 
 const TodayDate = styled.div`
@@ -1025,35 +1026,39 @@ const TodayClassLocation = styled.div`
 `;
 
 const UpcomingClasses = styled.div`
-  padding: 16px;
+  padding: 0;
 `;
 
 const UpcomingClassesList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  border-radius: 8px;
+  overflow: hidden;
 `;
 
 const UpcomingClassItem = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px;
-  background-color: ${props => props.theme.colors.background.secondary};
-  border-radius: 8px;
+  padding: 16px 20px;
+  background-color: white;
+  border-bottom: 1px solid ${props => props.theme.colors.border.light};
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: background-color 0.2s;
+  
+  &:last-child {
+    border-bottom: none;
+  }
   
   &:hover {
-    transform: translateX(4px);
+    background-color: ${props => props.theme.colors.background.hover};
   }
 `;
 
 const UpcomingClassDay = styled.div`
-  width: 40px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #4F46E5;
+  width: 80px;
+  font-size: 14px;
+  font-weight: 500;
+  color: ${props => props.theme.colors.primary[600]};
 `;
 
 const UpcomingClassContent = styled.div`
@@ -1066,33 +1071,43 @@ const UpcomingClassContent = styled.div`
 const UpcomingClassName = styled.div`
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 14px;
+  gap: 8px;
+  font-size: 15px;
   font-weight: 500;
   color: ${props => props.theme.colors.text.primary};
+  
+  svg {
+    color: ${props => props.theme.colors.text.secondary};
+  }
 `;
 
-const UpcomingClassDetails = styled.div`
+const UpcomingClassTime = styled.div`
   display: flex;
   align-items: center;
   gap: 6px;
-  flex-wrap: wrap;
-  font-size: 12px;
+  font-size: 13px;
+  color: ${props => props.theme.colors.text.secondary};
+`;
+
+const UpcomingClassLocation = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
   color: ${props => props.theme.colors.text.secondary};
 `;
 
 const NextIcon = styled.div`
-  color: #4F46E5;
+  color: ${props => props.theme.colors.primary[500]};
 `;
 
 const ViewAllLink = styled.a`
   display: block;
   text-align: center;
   font-size: 14px;
-  color: #4F46E5;
+  color: ${props => props.theme.colors.primary[600]};
   text-decoration: none;
-  padding: 12px 0 0;
-  margin-top: 16px;
+  padding: 16px;
   border-top: 1px solid ${props => props.theme.colors.border.light};
   cursor: pointer;
   

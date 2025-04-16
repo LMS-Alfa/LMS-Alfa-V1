@@ -452,7 +452,7 @@ const SearchIcon = styled.div`
 const SearchInput = styled.input`
   width: 100%;
   padding: ${props => `${props.theme.spacing[2]} ${props.theme.spacing[2]} ${props.theme.spacing[2]} ${props.theme.spacing[8]}`};
-  border: 1px solid ${props => props.theme.colors.border};
+  border: 1px solid ${props => props.theme.colors.neutral[300]};
   border-radius: ${props => props.theme.borderRadius.md};
   font-size: 0.9rem;
   
@@ -488,11 +488,13 @@ const FilterLabel = styled.div`
 
 const FilterSelect = styled.select`
   padding: ${props => `${props.theme.spacing[2]} ${props.theme.spacing[3]}`};
-  border: 1px solid ${props => props.theme.colors.border};
+  border: 1px solid ${props => props.theme.colors.neutral[300]};
   border-radius: ${props => props.theme.borderRadius.md};
   background-color: ${props => props.theme.colors.background.primary};
   color: ${props => props.theme.colors.text.primary};
   font-size: 0.9rem;
+  min-width: 150px;
+  appearance: auto;
   
   &:focus {
     outline: none;
@@ -749,19 +751,26 @@ const PageButton = styled.button<PageButtonProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  min-width: 32px;
-  height: 32px;
+  min-width: 36px;
+  height: 36px;
   padding: 0 ${props => props.theme.spacing[2]};
-  background-color: ${props => props.$isActive ? props.theme.colors.primary[600] : props.theme.colors.background.secondary};
+  background-color: ${props => props.$isActive ? props.theme.colors.primary[500] : 'transparent'};
   color: ${props => props.$isActive ? 'white' : props.theme.colors.text.primary};
-  border: 1px solid ${props => props.$isActive ? props.theme.colors.primary[600] : props.theme.colors.border};
-  border-radius: ${props => props.theme.borderRadius.md};
-  font-size: 0.9rem;
+  border: 1px solid ${props => props.$isActive ? 'transparent' : props.theme.colors.neutral[300]};
+  border-radius: 4px;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: all ${props => props.theme.transition.fast};
+  transition: all 0.2s ease;
   
   &:hover {
-    background-color: ${props => props.$isActive ? props.theme.colors.primary[700] : props.theme.colors.background.tertiary};
+    background-color: ${props => props.$isActive 
+      ? props.theme.colors.primary[600] 
+      : props.theme.colors.background.hover};
+    border-color: ${props => props.$isActive ? 'transparent' : props.theme.colors.neutral[400]};
+  }
+
+  &:focus {
+    outline: none;
   }
 `;
 

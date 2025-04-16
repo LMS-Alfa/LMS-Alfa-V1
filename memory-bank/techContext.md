@@ -11,6 +11,7 @@
 - **Animation**: Framer Motion for transitions and animations
 - **Icons**: React-icons with Feather icon set
 - **Package Manager**: npm
+- **Linting**: ESLint with TypeScript rules
 
 ### Planned Backend (Not Implemented Yet)
 - **Framework**: Node.js with Express
@@ -245,6 +246,114 @@ App
 - Color palette preservation across themes
 - Dark mode-specific adjustments for readability and contrast
 - Component-specific theme adaptations
+
+## Dark Theme Implementation Details
+
+### Theme Structure
+- Base theme with shared properties (spacing, borders, animations)
+- Light theme extends base theme with light-specific colors
+- Dark theme extends base theme with dark-specific colors
+- Theme context allows toggling between modes
+
+### Color Adaptation Strategy
+- Background colors have multiple levels for layering (primary, secondary, tertiary)
+- Text colors have different contrast levels (primary, secondary, tertiary)
+- Border colors adapt to provide proper definition in both themes
+- Shadow styles adjust for better visibility in dark mode
+- Each component accesses theme via props from styled-components
+
+### Accessibility Considerations
+- Text selection is styled for visibility in both themes
+- Input fields have proper contrast against backgrounds
+- Interactive elements maintain distinction in both themes
+- Focus indicators remain visible in dark mode
+- Table row selection is clearly visible 
+- Status indicators maintain their semantic meaning in both themes
+
+## Planned Testing Strategy
+
+### Unit Testing
+- Component testing with React Testing Library
+- Hook testing for custom hooks
+- Utility function testing
+
+### Integration Testing
+- User flows across multiple components
+- Form submission and validation
+- API interaction
+- Theme switching functionality
+
+### Accessibility Testing
+- Color contrast verification
+- Keyboard navigation testing
+- Screen reader compatibility
+- Focus management 
+
+## TypeScript Implementation
+
+### Type Definitions
+- Interfaces for all data models (User, Role, Permission, etc.)
+- Props interfaces for all React components
+- Props interfaces for styled components with custom props
+- Enums for predefined sets of values (status types, etc.)
+- Type assertions for narrowing types where needed
+- Generics for reusable components and functions
+
+### TypeScript Best Practices
+- Explicit return types for functions
+- Explicit type parameters for generic components
+- Union types for variables that can have multiple types
+- Type guards for runtime type checking
+- Unused parameters prefixed with underscore
+- Import aliases to resolve naming conflicts
+
+### Common TypeScript Patterns
+```tsx
+// Props interface for a component
+interface ButtonProps {
+  variant: 'primary' | 'secondary' | 'tertiary';
+  size: 'small' | 'medium' | 'large';
+  isFullWidth?: boolean;
+  onClick?: () => void;
+}
+
+// Props interface for a styled component
+interface StyledButtonProps {
+  $variant: 'primary' | 'secondary' | 'tertiary';
+  $size: 'small' | 'medium' | 'large';
+  $isFullWidth?: boolean;
+}
+
+// Data model interface
+interface User {
+  id: string;
+  username: string;
+  role: 'admin' | 'teacher' | 'student';
+  fullName?: string;
+  email?: string;
+}
+
+// Function with explicit return type
+const formatDate = (date: Date): string => {
+  return date.toLocaleDateString();
+}
+
+// Unused parameter with underscore
+const handleChange = (_event: React.ChangeEvent<HTMLInputElement>, value: string): void => {
+  console.log(value);
+}
+
+// Import alias to resolve naming conflicts
+import { User as UserType } from '../../types/User';
+```
+
+### Linter Configuration
+- ESLint with TypeScript parser
+- Rules enforcing consistent code style
+- No unused variables rule (with underscore exception)
+- Proper naming conventions
+- Import sorting rules
+- Accessibility rules for React components
 
 ## Dark Theme Implementation Details
 

@@ -42,15 +42,15 @@ const MyCourses: React.FC = () => {
       id: 3, 
       name: 'English Literature', 
       teacher: 'Mrs. Davis', 
-      progress: 85, 
-      nextClass: 'Wednesday, 1:00 PM',
+      progress: 100, 
+      nextClass: 'Completed',
       description: 'Analysis of classic and contemporary literary works with focus on critical thinking.',
-      startDate: '2023-01-15',
-      endDate: '2023-06-30',
+      startDate: '2022-09-01',
+      endDate: '2022-12-15',
       creditHours: 3,
       materials: 20,
       assignments: 6,
-      status: 'active'
+      status: 'completed'
     },
     { 
       id: 4, 
@@ -70,39 +70,56 @@ const MyCourses: React.FC = () => {
       id: 5, 
       name: 'World History', 
       teacher: 'Prof. Anderson', 
-      progress: 65, 
-      nextClass: 'Monday, 2:00 PM',
+      progress: 100, 
+      nextClass: 'Completed',
       description: 'Survey of major historical events and civilizations from ancient times to present day.',
-      startDate: '2023-01-15',
-      endDate: '2023-06-30',
+      startDate: '2022-09-01',
+      endDate: '2022-12-15',
       creditHours: 3,
       materials: 22,
       assignments: 7,
-      status: 'active'
+      status: 'completed'
     },
     { 
       id: 6, 
       name: 'Computer Science', 
       teacher: 'Dr. Roberts', 
-      progress: 90, 
-      nextClass: 'Tuesday, 3:30 PM',
+      progress: 0, 
+      nextClass: 'Starts July 15',
       description: 'Introduction to programming concepts, algorithms, and data structures.',
-      startDate: '2023-01-15',
-      endDate: '2023-06-30',
+      startDate: '2023-07-15',
+      endDate: '2023-12-20',
       creditHours: 4,
       materials: 16,
       assignments: 12,
-      status: 'active'
+      status: 'upcoming'
+    },
+    { 
+      id: 7, 
+      name: 'Introduction to Psychology', 
+      teacher: 'Dr. Martinez', 
+      progress: 0, 
+      nextClass: 'Starts July 10',
+      description: 'Exploration of human behavior, cognitive processes, and psychological theories.',
+      startDate: '2023-07-10',
+      endDate: '2023-12-18',
+      creditHours: 3,
+      materials: 14,
+      assignments: 8,
+      status: 'upcoming'
     }
   ];
 
-  // Filter courses based on search term and active tab
+  // Filter courses based on active tab and search term
   const filteredCourses = courses.filter(course => {
     const matchesSearch = course.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          course.teacher.toLowerCase().includes(searchTerm.toLowerCase());
+                         course.teacher.toLowerCase().includes(searchTerm.toLowerCase());
     
-    if (activeTab === 'all') return matchesSearch;
-    return matchesSearch && course.status === activeTab;
+    if (activeTab === 'all') {
+      return matchesSearch;
+    } else {
+      return matchesSearch && course.status === activeTab;
+    }
   });
 
   return (

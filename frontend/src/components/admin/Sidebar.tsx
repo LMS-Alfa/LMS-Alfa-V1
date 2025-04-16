@@ -130,8 +130,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, onMobileT
     { path: '/admin/subjects', icon: <FiBook />, label: 'Subjects' },
     { path: '/admin/classes', icon: <FiLayers />, label: 'Classes' },
     { path: '/admin/timetables', icon: <FiCalendar />, label: 'Timetables' },
-    { path: '/admin/settings', icon: <FiSettings />, label: 'Settings' },
-    { path: '/admin/profile', icon: <FiUser />, label: 'Profile' },
   ];
 
   // Teacher menu items
@@ -139,7 +137,6 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, onMobileT
     { path: '/teacher/dashboard', icon: <FiHome />, label: 'Dashboard' },
     { path: '/teacher/students', icon: <FiUsers />, label: 'Students' },
     { path: '/teacher/schedule', icon: <FiCalendar />, label: 'Schedule' },
-    { path: '/teacher/profile', icon: <FiUser />, label: 'Profile' },
   ];
 
   return (
@@ -232,6 +229,12 @@ const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, toggleSidebar, onMobileT
                   )}
                 </AnimatePresence>
 
+                <MenuItem 
+                  icon={<FiUser />} 
+                  label="Profile" 
+                  to={`/${role}/profile`}
+                  isCollapsed={isMobile ? false : isCollapsed} 
+                />
                 <MenuItem 
                   icon={<FiSettings />} 
                   label="Settings" 

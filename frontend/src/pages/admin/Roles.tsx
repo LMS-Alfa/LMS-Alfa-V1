@@ -731,19 +731,26 @@ const PageButton = styled.button<PageButtonProps>`
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: ${props => props.theme.borderRadius.md};
-  font-size: 0.85rem;
-  border: 1px solid ${props => props.$isActive ? props.theme.colors.primary[600] : props.theme.colors.border.light};
-  background-color: ${props => props.$isActive ? props.theme.colors.primary[600] : 'white'};
-  color: ${props => props.$isActive ? 'white' : props.theme.colors.text.secondary};
+  min-width: 36px;
+  height: 36px;
+  padding: 0 ${props => props.theme.spacing[2]};
+  background-color: ${props => props.$isActive ? props.theme.colors.primary[500] : 'transparent'};
+  color: ${props => props.$isActive ? 'white' : props.theme.colors.text.primary};
+  border: 1px solid ${props => props.$isActive ? 'transparent' : props.theme.colors.neutral[300]};
+  border-radius: 4px;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: all ${props => props.theme.transition.fast};
+  transition: all 0.2s ease;
   
   &:hover {
-    background-color: ${props => props.$isActive ? props.theme.colors.primary[700] : props.theme.colors.background.lighter};
-    border-color: ${props => props.$isActive ? props.theme.colors.primary[700] : props.theme.colors.border.dark};
+    background-color: ${props => props.$isActive 
+      ? props.theme.colors.primary[600] 
+      : props.theme.colors.background.hover};
+    border-color: ${props => props.$isActive ? 'transparent' : props.theme.colors.neutral[400]};
+  }
+
+  &:focus {
+    outline: none;
   }
 `;
 
