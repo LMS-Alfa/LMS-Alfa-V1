@@ -8,7 +8,9 @@ import UserForm from '../../components/admin/UserForm';
 // User interface
 interface User extends UserType {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
+  name?: string; // Keep for backwards compatibility
   email: string;
   role: string;
   status: 'active' | 'inactive';
@@ -20,6 +22,8 @@ interface User extends UserType {
 const mockUsers: User[] = [
   {
     id: '1',
+    firstName: 'John',
+    lastName: 'Doe',
     name: 'John Doe',
     email: 'john.doe@example.com',
     role: 'Admin',
@@ -29,6 +33,8 @@ const mockUsers: User[] = [
   },
   {
     id: '2',
+    firstName: 'Jane',
+    lastName: 'Smith',
     name: 'Jane Smith',
     email: 'jane.smith@example.com',
     role: 'Teacher',
@@ -38,6 +44,8 @@ const mockUsers: User[] = [
   },
   {
     id: '3',
+    firstName: 'Robert',
+    lastName: 'Johnson',
     name: 'Robert Johnson',
     email: 'robert.johnson@example.com',
     role: 'Teacher',
@@ -47,6 +55,8 @@ const mockUsers: User[] = [
   },
   {
     id: '4',
+    firstName: 'Emily',
+    lastName: 'Davis',
     name: 'Emily Davis',
     email: 'emily.davis@example.com',
     role: 'Student',
@@ -56,6 +66,8 @@ const mockUsers: User[] = [
   },
   {
     id: '5',
+    firstName: 'Michael',
+    lastName: 'Wilson',
     name: 'Michael Wilson',
     email: 'michael.wilson@example.com',
     role: 'Student',
@@ -65,6 +77,8 @@ const mockUsers: User[] = [
   },
   {
     id: '6',
+    firstName: 'Sarah',
+    lastName: 'Brown',
     name: 'Sarah Brown',
     email: 'sarah.brown@example.com',
     role: 'Parent',
@@ -74,6 +88,8 @@ const mockUsers: User[] = [
   },
   {
     id: '7',
+    firstName: 'David',
+    lastName: 'Miller',
     name: 'David Miller',
     email: 'david.miller@example.com',
     role: 'Admin',
@@ -101,8 +117,11 @@ const Users: React.FC = () => {
   
   // Filter users based on search term and filters
   const filteredUsers = mockUsers.filter(user => {
+    const fullName = `${user.firstName} ${user.lastName}`.toLowerCase();
     const matchesSearch = 
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+      fullName.includes(searchTerm.toLowerCase()) || 
+      user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesRole = filterRole ? user.role === filterRole : true;
@@ -301,7 +320,17 @@ const Users: React.FC = () => {
                   </CheckboxContainer>
                 </TableCell>
                 <TableCell>
-                  <UserName>{user.name}</UserName>
+                  <UserCell>
+                    <UserInfo>
+                      <UserAvatar>
+                        {user.firstName.charAt(0)}{user.lastName.charAt(0)}
+                      </UserAvatar>
+                      <UserDetails>
+                        <UserName>{user.firstName} {user.lastName}</UserName>
+                        <UserEmail>{user.email}</UserEmail>
+                      </UserDetails>
+                    </UserInfo>
+                  </UserCell>
                 </TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>
@@ -626,9 +655,44 @@ const TableCell = styled.td`
   color: ${props => props.theme.colors.text.primary};
 `;
 
+const UserCell = styled.td`
+  display: flex;
+  align-items: center;
+  gap: ${props => props.theme.spacing[4]};
+`;
+
+const UserInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: ${props => props.theme.spacing[4]};
+`;
+
+const UserAvatar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: ${props => props.theme.colors.background.tertiary};
+  color: ${props => props.theme.colors.text.primary};
+  font-size: 1.2rem;
+  font-weight: 500;
+`;
+
+const UserDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
 const UserName = styled.div`
   font-weight: 500;
   color: ${props => props.theme.colors.text.primary};
+`;
+
+const UserEmail = styled.div`
+  font-size: 0.9rem;
+  color: ${props => props.theme.colors.text.secondary};
 `;
 
 interface RoleBadgeProps {
